@@ -5,7 +5,7 @@ mod cli;
 mod lib;
 
 fn main() {
-    let args = get_cli();
+    let mut args = get_cli();
     println!("{}", args.net_adapter);
     println!("{}", args.output_file_name);
     println!("{}", args.filter);
