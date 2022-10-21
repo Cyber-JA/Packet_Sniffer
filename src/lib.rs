@@ -1,6 +1,7 @@
 use pktparse::ethernet::{EtherType, MacAddress};
 use pktparse::ip::IPProtocol;
 
+//struct used to represent packet structure
 pub struct ReportPacket{
     source_mac : MacAddress,
     dest_mac : MacAddress,
@@ -10,29 +11,39 @@ pub struct ReportPacket{
     l4_protocol : IPProtocol,
     source_port : u16,
     dest_port : u16,
-    time : pcap::timeval
+    //time : pcap::timeval
 }
 
+//implementation of methods
 impl ReportPacket{
-    pub fn new() -> ReportPacket{
-        ReportPacket
+
+    pub fn new(source_mac: MacAddress,
+               dest_mac: MacAddress,
+               l3_protocol: EtherType,
+               source_ip:IPAddr,
+               dest_ip: IPAddr,
+               l4_protocol: IPProtocol,
+               source_port: u16,
+               dest_port: u16) -> Self{
+        ReportPacket{source_mac, dest_mac, l3_protocol, source_ip, dest_ip, l4_protocol, source_port, dest_port}
     }
+
 }
 
+//enum used to represent in a compact form both the versions of IP addresses
 pub enum IPAddr{
     Ipv4Addr,
     Ipv6Addr
 }
 
 
-pub fn packet_parser() -> () {
+/*pub fn packet_parser() -> () {
     let mut cap2 = pcap::Capture::from_device(list[2].clone()).unwrap()
         .promisc(true)
         .open()
         .unwrap();
 
     while let Ok(packet) = cap2.next_packet() {
-        let p = ReportPacket::new();
         if let Ok((payload, frame)) = pktparse::ethernet::parse_ethernet_frame(packet.data) {
             println!("{:?}", frame.ethertype);
             match frame.ethertype {
@@ -53,4 +64,4 @@ pub fn packet_parser() -> () {
             }
         }
     }
-}
+}*/
