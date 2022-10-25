@@ -5,8 +5,6 @@ use pcap::Packet;
 use pktparse::ethernet::{EtherType, MacAddress};
 use pktparse::ip::IPProtocol;
 use crate::report_packet::report_packet::{ReportPacket};
-use hex;
-use nom::IResult;
 use pktparse::ip::IPProtocol::{ICMP, Other, TCP, UDP};
 use pktparse::ipv4::IPv4Header;
 
