@@ -34,7 +34,4 @@ pub mod report_packet {
             ReportPacket { source_mac, dest_mac, l3_protocol, source_ip, dest_ip, source_ipv6, dest_ipv6, l4_protocol, source_port, dest_port }
         }
     }
-
-    //enum used to represent in a compact form both the versions of IP addresses
-
 }
