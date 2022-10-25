@@ -7,6 +7,7 @@ use pktparse::ip::IPProtocol;
 use crate::report_packet::report_packet::{ReportPacket};
 use hex;
 use nom::IResult;
+use pktparse::ip::IPProtocol::{ICMP, Other, TCP, UDP};
 use pktparse::ipv4::IPv4Header;
 
 //main general function used by the sniffing thread
@@ -42,11 +43,17 @@ fn parse_ipv4(payload: &[u8], mut report: ReportPacket) -> ReportPacket{
         report.source_ip = datagram.source_addr;
         report.dest_ip = datagram.dest_addr;
         report.l4_protocol = datagram.protocol;
+        match datagram.protocol {
+            IPProtocol::TCP => {report = parse_tcp(payload, report);}
+            IPProtocol::UDP => {report = parse_udp(payload, report); }
+            IPProtocol::ICMP => {report.l4_protocol = ICMP; }
+            _ => {report.l4_protocol = Other(0); }
+        }
     }
     report
 }
 
-//IPV6 PARSING
+//IPV6 PARSING, TO COMPLETE
 fn parse_ipv6(payload: &[u8], mut report: ReportPacket) -> ReportPacket{
     if let Ok((payload, datagram)) = pktparse::ipv6::parse_ipv6_header(payload)
     {
@@ -67,6 +74,33 @@ fn parse_arp(payload: &[u8], mut report: ReportPacket) -> ReportPacket{
         report.dest_mac = header.dest_mac;
     }
     report
+}
+
+//TCP PARSING, TO COMPLETE
+fn parse_tcp(payload: &[u8], mut report: ReportPacket) -> ReportPacket{
+    if let (Ok((payload, header))) = pktparse::tcp::parse_tcp_header(payload)
+    {
+        report.source_port = header.source_port;
+        report.dest_port = header.dest_port;
+        report.l4_protocol = TCP;
+    }
+    report
+}
+
+//UDP PARSING, TO COMPLETE
+fn parse_udp(payload: &[u8], mut report: ReportPacket) -> ReportPacket{
+    if let (Ok((udp_datagram, header))) = pktparse::udp::parse_udp_header(payload)
+    {
+        report.source_port = header.source_port;
+        report.dest_port = header.dest_port;
+        report.l4_protocol = UDP;
+    }
+    report
+}
+
+//ICMP PARSING, TO COMPLETE
+fn parse_icmp(){
+
 }
 
 /**************************************************/
