@@ -60,6 +60,12 @@ fn parse_ipv6(payload: &[u8], mut report: ReportPacket) -> ReportPacket{
         report.source_ipv6 = datagram.source_addr;
         report.dest_ipv6 = datagram.dest_addr;
         report.l4_protocol = datagram.next_header;
+        match datagram.next_header {
+            IPProtocol::TCP => {report = parse_tcp(payload, report);}
+            IPProtocol::UDP => {report = parse_udp(payload, report); }
+            IPProtocol::ICMP => {report = parse_icmp(payload, report); }
+            _ => {report.l4_protocol = Other(0); }
+        }
     }
     report
 }
