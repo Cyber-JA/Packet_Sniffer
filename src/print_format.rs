@@ -13,7 +13,3 @@ pub fn print(packet: ReportPacket){
              , packet.source_ip,packet.source_port,  packet.dest_ip, packet.dest_port, packet.l3_protocol, packet.l4_protocol);
 }
 
-fn print_mac(adr: MacAddress){
-    println!("{:02x}:{:02x}:{:02x}:{:02x}:{:02x}:{:02x}", adr.0[0], adr.0[1], adr.0[2], adr.0[3], adr.0[4], adr.0[5]);
-}
-
