@@ -2,6 +2,7 @@
 
 use std::net::{Ipv4Addr, Ipv6Addr};
 use pcap::Packet;
+use pktparse::arp;
 use pktparse::ethernet::{EtherType, MacAddress};
 use pktparse::ethernet::EtherType::IPv4;
 use pktparse::ip::IPProtocol;
