@@ -2,6 +2,8 @@
 use clap::Parser;
 use pcap::Device;
 use std::io;
+use std::io::BufRead;
+
 //TODO: check input values correctness and managing errors.
 /// time to sniff
 #[derive(Parser, Debug)]
@@ -27,9 +29,10 @@ pub struct Args {
 //function used to handle cli arguments and eventually choices by the user (e.g. select a device if not known one)
 pub fn get_cli() -> Args {
     let mut args = Args::parse(); //launching CLI
-
+    let mut user_input = String::new(); //gettin user's input choice
+    let mut my_int = 0;
     /*****CHECKING VALUE TO SELECT DEVICE AND CHECK CORRECTNESS OF VALUES PROVIDED****/
-    if args.net_adapter == 0 { //if this value is == -1 then user wants to see the list of devices
+    if args.net_adapter == 0 { //if this value is == 0 then user wants to see the list of devices
         let mut count:usize = 1; //counter used to display a list jointly with the devices available and to select one
         let list = Device::list().unwrap(); //get the list of devices
         println!("Select a device:");
@@ -39,12 +42,8 @@ pub fn get_cli() -> Args {
             count+=1;
         }
 
-        let mut user_input = String::new(); //gettin user's input choice
-        let stdin = io::stdin();
-        let mut my_int = 0;
-        stdin.read_line(&mut user_input).unwrap();
+        io::stdin().lock().read_line(&mut user_input).unwrap();
         my_int = user_input.trim().parse::<usize>().unwrap();
-
         args.net_adapter = my_int; //assign value selected to the struct to return
     }
     /*******************************************************************************/

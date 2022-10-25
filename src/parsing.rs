@@ -3,6 +3,7 @@
 use std::net::{Ipv4Addr, Ipv6Addr};
 use pcap::Packet;
 use pktparse::ethernet::{EtherType, MacAddress};
+use pktparse::ethernet::EtherType::IPv4;
 use pktparse::ip::IPProtocol;
 use crate::report_packet::report_packet::{ReportPacket};
 use pktparse::ip::IPProtocol::{ICMP, Other, TCP, UDP};
@@ -44,7 +45,7 @@ fn parse_ipv4(payload: &[u8], mut report: ReportPacket) -> ReportPacket{
         match datagram.protocol {
             IPProtocol::TCP => {report = parse_tcp(payload, report);}
             IPProtocol::UDP => {report = parse_udp(payload, report); }
-            IPProtocol::ICMP => {report.l4_protocol = ICMP; }
+            IPProtocol::ICMP => {report = parse_icmp(payload, report); }
             _ => {report.l4_protocol = Other(0); }
         }
     }
@@ -97,8 +98,14 @@ fn parse_udp(payload: &[u8], mut report: ReportPacket) -> ReportPacket{
 }
 
 //ICMP PARSING, TO COMPLETE
-fn parse_icmp(){
-
+fn parse_icmp(payload: &[u8], mut report: ReportPacket) -> ReportPacket{
+    if let (Ok((icmp_payload, header))) = pktparse::icmp::parse_icmp_header(payload)
+    {   println!("{:?}", header);
+        //report.source_port = header.source_port;
+        //report.dest_port = header.dest_port;
+        report.l3_protocol = IPv4;
+    }
+    report
 }
 
 /**************************************************/
