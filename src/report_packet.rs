@@ -4,7 +4,7 @@ pub mod report_packet {
     use pktparse::ip::IPProtocol;
 
     //struct used to represent packet structure
-    #[derive(Debug)]
+    #[derive(Debug, Clone, Copy)]
     pub struct ReportPacket {
         pub source_mac: MacAddress,
         pub dest_mac: MacAddress,

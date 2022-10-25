@@ -16,3 +16,4 @@ pub fn print(packet: ReportPacket){
 fn print_mac(adr: MacAddress){
     println!("{:02x}:{:02x}:{:02x}:{:02x}:{:02x}:{:02x}", adr.0[0], adr.0[1], adr.0[2], adr.0[3], adr.0[4], adr.0[5]);
 }
+
