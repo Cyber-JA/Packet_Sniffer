@@ -1,6 +1,4 @@
 /***************PARSING MODULE***************/
-//TODO write format to print packet's information
-
 use std::fmt::{Display, Formatter};
 use std::fs::File;
 use std::io::Write;
