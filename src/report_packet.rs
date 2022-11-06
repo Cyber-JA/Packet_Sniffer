@@ -33,7 +33,16 @@ pub mod report_packet {
                    l4_protocol: IPProtocol,
                    source_port: u16,
                    dest_port: u16) -> Self {
-            ReportPacket { source_mac, dest_mac, l3_protocol, source_ip, dest_ip, source_ipv6, dest_ipv6, l4_protocol, source_port, dest_port }
+            ReportPacket { source_mac,
+                            dest_mac,
+                            l3_protocol,
+                            source_ip,
+                            dest_ip,
+                            source_ipv6,
+                            dest_ipv6,
+                            l4_protocol,
+                            source_port,
+                            dest_port }
         }
     }
 }

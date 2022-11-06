@@ -78,6 +78,8 @@ fn parse_arp(payload: &[u8], mut report: ReportPacket) -> ReportPacket{
         report.l3_protocol = EtherType::ARP;
         report.source_mac = header.src_mac;
         report.dest_mac = header.dest_mac;
+        report.source_ip = header.src_addr;
+        report.dest_ip = header.dest_addr;
     }
     report
 }
@@ -111,6 +113,7 @@ fn parse_icmp(payload: &[u8], mut report: ReportPacket) -> ReportPacket{
         //report.source_port = header.source_port;
         //report.dest_port = header.dest_port;
         report.l3_protocol = IPv4;
+        println!("{:?}", header)
     }
     report
 }
