@@ -10,7 +10,7 @@ use crate::parsing;
 use crate::report_packet::report_packet;
 
 //function used by the thread that must sniff packet
-pub fn sniff(net_adapter: usize, tx: SyncSender<ReportPacket>) -> () {
+pub fn sniff(net_adapter: usize, tx: SyncSender<ReportPacket>, filter: String) -> () {
 
     /****************** SNIFFING THREAD *******************/
     thread::spawn(move || {

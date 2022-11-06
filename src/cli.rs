@@ -31,19 +31,23 @@ pub fn get_cli() -> Args {
     let mut args = Args::parse(); //launching CLI
     let mut user_input = String::new(); //gettin user's input choice
     let mut my_int = 0;
+
+
     /*****CHECKING VALUE TO SELECT DEVICE AND CHECK CORRECTNESS OF VALUES PROVIDED****/
-    if args.net_adapter == 0 { //if this value is == 0 then user wants to see the list of devices
-        let mut count:usize = 1; //counter used to display a list jointly with the devices available and to select one
+    if args.net_adapter == 0 {
+        let mut count:usize = 1;
         let list = Device::list().unwrap(); //get the list of devices
         println!("Select a device:");
 
         for d in list.iter(){ //print list and counter (used to select the device)
-            println!("count: {} device: {:?}", count, d.name);
+            println!("count: {} device: {:?}", count, d.desc.as_ref().unwrap());
             count+=1;
         }
-
-        io::stdin().lock().read_line(&mut user_input).unwrap();
-        my_int = user_input.trim().parse::<usize>().unwrap();
+        while my_int <= 0 || my_int > list.len() - 1 {
+            io::stdin().lock().read_line(&mut user_input).unwrap();
+            my_int = user_input.trim().parse::<usize>().unwrap();
+            if my_int < 1 || my_int > list.len() { user_input.clear(); println!("Error! Insert a valid number:");}
+        }
         args.net_adapter = my_int; //assign value selected to the struct to return
     }
     /*******************************************************************************/
