@@ -21,8 +21,11 @@ pub fn sniff(net_adapter: usize, report_vector : Arc<Mutex<Vec<ReportPacket>>>, 
             .open()
             .unwrap();
         while let Ok(packet) = cap.next_packet() {
-            let report = parsing::parse(packet);
-            insert_into_report(&report_vector, report);
+            let report = parsing::parse(packet).clone();
+            let mut report_vectory_copy = report_vector.clone();
+            thread::spawn(move || {
+                insert_into_report(&report_vectory_copy, report);
+            });
         }
 
     });

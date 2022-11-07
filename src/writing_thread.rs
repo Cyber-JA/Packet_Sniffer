@@ -36,7 +36,7 @@ pub fn write_report(report_vector : &Arc<Mutex<Vec<ReportPacket>>>, timeout : u6
     thread::sleep(Duration::from_millis(timeout));
     println!("----------------------------------------------------------------------------------");
     let mut vec = report_vector.lock().unwrap();
-    vec.iter().for_each(|p| fmt_for_file(*p, file));
+    vec.iter().for_each(|&p| fmt_for_file(p, file));
     println!("----------------------------------------------------------------------------------");
     vec.clear();
 }

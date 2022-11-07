@@ -35,18 +35,17 @@ fn main() {
         timeout: time after which a report must be produced */
     /******************************************************/
 
-    /******************************************************/
+    /****************** SNIFFING THREADS *******************/
+    let filter = filter.clone();
+    let report_vector2 = report_vector.clone();
+    sniffing_thread::sniff(net_adapter_cp, report_vector2, filter);
+
     /******************* WRITING THREAD *******************/
 
     let report_vector1 = report_vector.clone();
     writing_thread::write_file(output_file_name, timeout, report_vector1);
 
     /******************************************************/
-    /****************** SNIFFING THREADS *******************/
-    let filter = filter.clone();
-    let report_vector2 = report_vector.clone();
-    sniffing_thread::sniff(net_adapter_cp, report_vector2, filter);
-
     loop{
 
     }
