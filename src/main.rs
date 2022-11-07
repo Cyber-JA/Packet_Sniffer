@@ -26,6 +26,7 @@ fn main() {
     let output_file_name = args.output_file_name.clone();
     let filter = args.filter.clone();
     let timeout = args.timeout.clone();
+    let mut report_vector = Arc::new(Mutex::new(Vec::new()));
 
     /*  args's arguments:
         net_adapter: index used in selecting Device::lookup
@@ -34,30 +35,27 @@ fn main() {
         timeout: time after which a report must be produced */
     /******************************************************/
 
-    /*********SETTING UP CHANNEL BETWEEN THREADS************/
-
-    let (tx, rx) = mpsc::sync_channel(256);
-    let (tx2, rx2) = mpsc::sync_channel(256);
     /******************************************************/
     /******************* WRITING THREAD *******************/
 
-    writing_thread::write_file(output_file_name, timeout, rx2);
+    let report_vector1 = report_vector.clone();
+    writing_thread::write_file(output_file_name, timeout, report_vector1);
 
     /******************************************************/
     /****************** SNIFFING THREADS *******************/
+    let filter = filter.clone();
+    let report_vector2 = report_vector.clone();
+    sniffing_thread::sniff(net_adapter_cp, report_vector2, filter);
 
-    for _ in 0..3 {
-        let tx = tx.clone();
-        let filter = filter.clone();
-        sniffing_thread::sniff(net_adapter_cp, tx, filter);
+    loop{
+
     }
+
 
     /******************************************************/
 
     /*********** READING PACKETS SENT BY THE SNIFFING THREADS *************/
 
-    for packet in rx.iter() {
-        tx2.send(packet).unwrap();
-    }
+
     /*********************************************************************/
 }

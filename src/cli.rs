@@ -7,7 +7,7 @@ use std::io::BufRead;
 //TODO: check input values correctness and managing errors.
 /// time to sniff
 #[derive(Parser, Debug)]
-#[command(author="Caruso, Andorno, Fois", version, about = "A simple packet_sniffer", long_about = "A simple packet_sniffer in Rust language. All right reserved")]
+#[command(author="Caruso, Andorno, Fois", version, about = "A simple packet_sniffer", long_about = "A simple packet_sniffer in Rust language. All rights reserved")]
 pub struct Args {
     /// specify net_adapter, do not use this option to see a list of available devices and select among them
     #[arg(short, long, default_value_t = 0)]
