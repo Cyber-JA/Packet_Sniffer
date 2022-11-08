@@ -29,9 +29,7 @@ pub struct Args {
 //function used to handle cli arguments and eventually choices by the user (e.g. select a device if not known one)
 pub fn get_cli() -> Args {
     let mut args = Args::parse(); //launching CLI
-    let mut user_input = String::new(); //gettin user's input choice
-    let mut my_int = 0;
-
+    let mut my_int = 0; //flag used to select the correct device
 
     /*****CHECKING VALUE TO SELECT DEVICE AND CHECK CORRECTNESS OF VALUES PROVIDED****/
     if args.net_adapter == 0 {
@@ -44,14 +42,29 @@ pub fn get_cli() -> Args {
             count+=1;
         }
         while my_int <= 0 || my_int > list.len() - 1 {
-            io::stdin().lock().read_line(&mut user_input).unwrap();
-            my_int = user_input.trim().parse::<usize>().unwrap();
-            if my_int < 1 || my_int > list.len() { user_input.clear(); println!("Error! Insert a valid number:");}
+            my_int = read_input_usize(list.len());
         }
         args.net_adapter = my_int; //assign value selected to the struct to return
     }
     /*******************************************************************************/
 
     args //struct returned with filled value
+}
+
+pub fn read_input_string() -> String{
+    println!("Waiting for user input...");
+    let mut user_input = String::new();
+    let std = io::stdin().lock().read_line(&mut user_input).unwrap();
+    user_input = user_input.trim().parse().unwrap();
+    user_input
+}
+
+pub fn read_input_usize(len: usize) -> usize{
+    println!("Waiting for user input...");
+    let mut user_input = String::new();
+    let std = io::stdin().lock().read_line(&mut user_input).unwrap();
+    let my_int = user_input.trim().parse::<usize>().unwrap();
+    if my_int < 1 || my_int > len {println!("Error! Insert a valid number:");}
+    my_int
 }
 

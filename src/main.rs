@@ -49,8 +49,6 @@ fn main() {
     loop{
 
     }
-
-
     /******************************************************/
 
     /*********** READING PACKETS SENT BY THE SNIFFING THREADS *************/

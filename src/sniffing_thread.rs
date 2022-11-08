@@ -2,7 +2,7 @@ use mpsc::Receiver;
 use std::sync::{Arc, mpsc, Mutex};
 use std::sync::mpsc::SyncSender;
 use std::thread;
-use pcap::{Device, Packet};
+use pcap::{Capture, Device, Error, Inactive, Packet};
 use pktparse::ethernet::{EtherType, MacAddress};
 use pktparse::ip::IPProtocol;
 use report_packet::ReportPacket;
