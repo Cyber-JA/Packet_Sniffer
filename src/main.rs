@@ -7,6 +7,7 @@ use std::time::Duration;
 use pcap::{Device, Error, Packet};
 use pktparse::ethernet::{EtherType, MacAddress};
 use pktparse::ip::IPProtocol;
+use crate::cli::read_input_string;
 use crate::report_packet::report_packet::ReportPacket;
 
 //main di test
@@ -47,7 +48,13 @@ fn main() {
 
     /******************************************************/
     loop{
-
+        let string = read_input_string();
+        match string.as_str() {
+            "start" => {println!("sniffing started");}
+            "resume" => {println!("sniffing resumed");}
+            "stop" => {println!("sniffing stopped");}
+            _ =>{}
+        }
     }
     /******************************************************/
 

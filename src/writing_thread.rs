@@ -34,9 +34,9 @@ pub fn write_file(file_name: String, timeout: u16, report_vector : Arc<Mutex<Vec
 
 pub fn write_report(report_vector : &Arc<Mutex<Vec<ReportPacket>>>, timeout : u64, file: &mut File) -> (){
     thread::sleep(Duration::from_millis(timeout));
-    println!("----------------------------------------------------------------------------------");
+    //println!("----------------------------------------------------------------------------------");
     let mut vec = report_vector.lock().unwrap();
     vec.iter().for_each(|&p| fmt_for_file(p, file));
-    println!("----------------------------------------------------------------------------------");
+    //println!("----------------------------------------------------------------------------------");
     vec.clear();
 }
