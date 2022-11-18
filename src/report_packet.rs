@@ -1,3 +1,4 @@
+#[allow(non_snake_case)]
 pub mod report_packet {
     use std::net::{Ipv4Addr, Ipv6Addr};
     use pktparse::ethernet;

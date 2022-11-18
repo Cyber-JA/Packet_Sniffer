@@ -1,5 +1,5 @@
 /******PARSING MODULE******/
-
+#[allow(non_snake_case)]
 use std::net::{Ipv4Addr, Ipv6Addr};
 use pcap::Packet;
 use pktparse::arp;
