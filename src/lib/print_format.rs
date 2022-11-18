@@ -1,7 +1,7 @@
 use crate::lib::report_packet::ReportPacket;
 use std::fs::File;
 use std::io::Write;
-
+#[warn(dead_code)]
 pub fn print(packet: ReportPacket) {
     println!(
         "{:02x}:{:02x}:{:02x}:{:02x}:{:02x}:{:02x}\
@@ -29,7 +29,7 @@ pub fn print(packet: ReportPacket) {
 }
 
 pub fn fmt_for_file(packet: ReportPacket, file: &mut File) {
-    let mut string = format!(
+    let string = format!(
         "{:02x}:{:02x}:{:02x}:{:02x}:{:02x}:{:02x}\
             -> {:02x}:{:02x}:{:02x}:{:02x}:{:02x}:{:02x} \
             | {:?}:{:?} -> {:?}:{:?} | l3 protocol: {:?} | l4 protocol: {:?}\n",

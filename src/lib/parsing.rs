@@ -9,7 +9,7 @@ use std::net::{Ipv4Addr, Ipv6Addr};
 
 //main general function used by the sniffing thread
 pub fn parse(packet: Packet) -> ReportPacket {
-    let mut report = parse_ether(packet.data);
+    let report = parse_ether(packet.data);
     report
 }
 
@@ -100,7 +100,7 @@ fn parse_ipv6(payload: &[u8], mut report: ReportPacket) -> ReportPacket {
 
 //ARP PARSING, TO COMPLETE
 fn parse_arp(payload: &[u8], mut report: ReportPacket) -> ReportPacket {
-    if let Ok((payload, header)) = pktparse::arp::parse_arp_pkt(payload) {
+    if let Ok((_payload, header)) = pktparse::arp::parse_arp_pkt(payload) {
         report.l3_protocol = EtherType::ARP;
         report.source_mac = header.src_mac;
         report.dest_mac = header.dest_mac;
@@ -112,7 +112,7 @@ fn parse_arp(payload: &[u8], mut report: ReportPacket) -> ReportPacket {
 
 //TCP PARSING, TO COMPLETE
 fn parse_tcp(payload: &[u8], mut report: ReportPacket) -> ReportPacket {
-    if let Ok((payload, header)) = pktparse::tcp::parse_tcp_header(payload) {
+    if let Ok((_payload, header)) = pktparse::tcp::parse_tcp_header(payload) {
         report.source_port = header.source_port;
         report.dest_port = header.dest_port;
         report.l4_protocol = TCP;
@@ -122,7 +122,7 @@ fn parse_tcp(payload: &[u8], mut report: ReportPacket) -> ReportPacket {
 
 //UDP PARSING, TO COMPLETE
 fn parse_udp(payload: &[u8], mut report: ReportPacket) -> ReportPacket {
-    if let (Ok((udp_datagram, header))) = pktparse::udp::parse_udp_header(payload) {
+    if let Ok((_udp_datagram, header)) = pktparse::udp::parse_udp_header(payload) {
         report.source_port = header.source_port;
         report.dest_port = header.dest_port;
         report.l4_protocol = UDP;
@@ -132,7 +132,7 @@ fn parse_udp(payload: &[u8], mut report: ReportPacket) -> ReportPacket {
 
 //ICMP PARSING, TO COMPLETE
 fn parse_icmp(payload: &[u8], mut report: ReportPacket) -> ReportPacket {
-    if let (Ok((icmp_payload, header))) = pktparse::icmp::parse_icmp_header(payload) {
+    if let Ok((_icmp_payload, header)) = pktparse::icmp::parse_icmp_header(payload) {
         println!("{:?}", header);
         //report.source_port = header.source_port;
         //report.dest_port = header.dest_port;

@@ -1,7 +1,7 @@
 use crate::lib::parsing::parse;
 use crate::lib::report_packet::ReportPacket;
 use pcap::Device;
-use std::sync::mpsc::{channel, Receiver, Sender, TryRecvError};
+use std::sync::mpsc::{channel, Sender, TryRecvError};
 use std::sync::{Arc, Mutex};
 use std::thread;
 

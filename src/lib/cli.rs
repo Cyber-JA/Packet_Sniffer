@@ -1,4 +1,3 @@
-use crate::lib::print_format::print;
 use clap::Parser;
 use pcap::Device;
 use std::io;
@@ -60,7 +59,7 @@ pub fn get_cli() -> Args {
 pub fn read_input_string() -> String {
     println!("Waiting for user input...");
     let mut user_input = String::new();
-    let std = io::stdin().lock().read_line(&mut user_input).unwrap();
+    io::stdin().lock().read_line(&mut user_input).unwrap();
     user_input = user_input.trim().parse().unwrap();
     user_input
 }
@@ -68,7 +67,7 @@ pub fn read_input_string() -> String {
 pub fn read_input_usize(len: usize) -> usize {
     println!("Waiting for user input...");
     let mut user_input = String::new();
-    let std = io::stdin().lock().read_line(&mut user_input).unwrap();
+    io::stdin().lock().read_line(&mut user_input).unwrap();
     let my_int = user_input.trim().parse::<usize>().unwrap();
     if my_int < 1 || my_int > len {
         println!("Error! Insert a valid number:");
@@ -82,7 +81,7 @@ pub fn get_user_commands() -> String {
     println!("-'pause' to pause the sniffing (can resume)");
     println!("-'stop' to stop the sniffing");
     println!("-'resume' to resume the sniffing");
-    let mut user_input = read_input_string();
+    let user_input = read_input_string();
     match user_input.as_str() {
         "start" => {}
         "pause" => {}

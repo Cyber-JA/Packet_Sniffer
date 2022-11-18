@@ -6,8 +6,6 @@ pub mod sniffing_thread;
 pub mod writing_thread;
 
 use crate::lib::cli::{get_cli, get_user_commands};
-use crate::lib::sniffing_thread::sniff;
-use crate::lib::writing_thread::write_file;
 use std::sync::mpsc::channel;
 use std::sync::{Arc, Mutex};
 

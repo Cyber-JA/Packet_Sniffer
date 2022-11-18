@@ -1,7 +1,7 @@
 use crate::lib::print_format::fmt_for_file;
 use crate::lib::report_packet::ReportPacket;
 use std::fs::{File, OpenOptions};
-use std::sync::mpsc::{channel, Receiver, Sender, TryRecvError};
+use std::sync::mpsc::{channel, Sender, TryRecvError};
 use std::sync::{Arc, Mutex};
 use std::thread;
 use std::time::Duration;
