@@ -4,7 +4,7 @@ use mpsc::Receiver;
 use std::cell::Ref;
 use std::error::Error;
 use std::sync::{Arc, mpsc, Mutex};
-use std::sync::mpsc::{Sender, SyncSender, TryRecvError};
+use std::sync::mpsc::{channel, Sender, SyncSender, TryRecvError};
 use std::thread;
 use std::thread::sleep;
 use std::time::Duration;
@@ -17,8 +17,9 @@ use crate::report_packet::report_packet;
 use std::io::prelude::*;
 use std::path::PathBuf;
 #[allow(non_snake_case)]
-pub fn write_file(file_name: String, timeout: u16, report_vector : Arc<Mutex<Vec<ReportPacket>>>, rx_writer: Receiver<String>, rev_tx_writer: Sender<String>){
+pub fn write_file(file_name: String, timeout: u16, report_vector : Arc<Mutex<Vec<ReportPacket>>>, /*rx_writer: &Receiver<String>,*/ rev_tx_writer: Sender<String>) -> Sender<String> {
     /****************** WRITER THREAD *******************/
+    let ( tx_writer, rx_writer) = channel::<String>();
     thread::Builder::new()
         .name("writer".into()).spawn(move || {
         let mut file = OpenOptions::new()
@@ -40,6 +41,7 @@ pub fn write_file(file_name: String, timeout: u16, report_vector : Arc<Mutex<Vec
         rev_tx_writer.send(String::from("Stopping writer thread")).unwrap();
     }).unwrap();
     /******************************************************/
+    tx_writer
 }
 
 pub fn write_report(report_vector : &Arc<Mutex<Vec<ReportPacket>>>, timeout : u64, file: &mut File) -> (){

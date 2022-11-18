@@ -72,11 +72,13 @@ pub(crate) mod cli {
 
     pub fn get_user_commands() -> String {
         println!("Commands:");
+        println!("-'start' to start the sniffing (can be stopped and resumed)");
         println!("-'pause' to pause the sniffing (can resume)");
-        println!("-'stop' to stop the sniffing");
-        println!("-'resume' to resume the sniffing");
+        println!("-'stop' to stop the sniffing (program end");
+        println!("-'resume' to resume the sniffing (from paused sniffing");
         let mut user_input = read_input_string();
         match user_input.as_str() {
+            "start" => {}
             "pause" => {}
             "resume" => {}
             "stop" => {}
