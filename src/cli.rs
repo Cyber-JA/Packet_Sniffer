@@ -1,11 +1,10 @@
 //CLI developed using clap
+#![allow(non_snake_case)]
 pub(crate) mod cli {
     use clap::Parser;
     use pcap::Device;
     use std::io;
     use std::io::BufRead;
-
-    #[allow(non_snake_case)]
 //TODO: check input values correctness and managing errors.
     /// time to sniff
     #[derive(Parser, Debug)]
@@ -56,7 +55,7 @@ pub(crate) mod cli {
     pub fn read_input_string() -> String {
         println!("Waiting for user input...");
         let mut user_input = String::new();
-        let std = io::stdin().lock().read_line(&mut user_input).unwrap();
+        io::stdin().lock().read_line(&mut user_input).unwrap();
         user_input = user_input.trim().parse().unwrap();
         user_input
     }
@@ -64,7 +63,7 @@ pub(crate) mod cli {
     pub fn read_input_usize(len: usize) -> usize {
         println!("Waiting for user input...");
         let mut user_input = String::new();
-        let std = io::stdin().lock().read_line(&mut user_input).unwrap();
+        io::stdin().lock().read_line(&mut user_input).unwrap();
         let my_int = user_input.trim().parse::<usize>().unwrap();
         if my_int < 1 || my_int > len { println!("Error! Insert a valid number:"); }
         my_int
@@ -76,7 +75,7 @@ pub(crate) mod cli {
         println!("-'pause' to pause the sniffing (can resume)");
         println!("-'stop' to stop the sniffing (program end");
         println!("-'resume' to resume the sniffing (from paused sniffing");
-        let mut user_input = read_input_string();
+        let user_input = read_input_string();
         match user_input.as_str() {
             "start" => {}
             "pause" => {}

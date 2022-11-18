@@ -1,17 +1,8 @@
+#![allow(non_snake_case)]
 extern crate core;
-use std::net::{Ipv4Addr, Ipv6Addr};
-use std::sync::{Arc, mpsc, Mutex};
-use std::sync::mpsc::{channel, sync_channel, SyncSender};
-use std::thread;
-use std::thread::sleep;
-use std::time::Duration;
-use pcap::{Device, Error, Packet};
-use pktparse::ethernet::{EtherType, MacAddress};
-use pktparse::ip::IPProtocol;
-use cli::cli::read_input_string;
+use std::sync::{Arc, Mutex};
+use std::sync::mpsc::{channel};
 use cli::cli::get_user_commands;
-use print_format::print;
-use report_packet::report_packet::ReportPacket;
 
 //main di test
 mod cli;
@@ -22,39 +13,49 @@ mod parsing;
 mod print_format;
 mod writing_thread;
 use crate::cli::cli::get_cli;
-#[allow(non_snake_case)]
 
 fn main() {
 
     /*******************READING FROM CLI******************/
-    let mut args = get_cli();
+    let args = get_cli();
     /********************************************************/
-    /*  args's arguments:                                   */
+    /*  args's struct arguments:                                   */
     /*  net_adapter: index used in selecting Device::lookup */
     /*  output_file_name: self explained                    */
     /*  filter: string to filter packet sniffing            */
     /*  timeout: time after which a report must be produced */
     /*                                                      */
     /********************************************************/
-    /*cloning parameters to pass to threads*/
+
+    /************ PARAMETERS TO PASS TO THREADS *************/
     let net_adapter_cp = args.net_adapter.clone();
     let filter = args.filter.clone();
     let output_file_name = args.output_file_name.clone();
     let timeout = args.timeout.clone();
-    /*mutex used between writer and sniffer threads to push and pop packets*/
-    let mut report_vector = Arc::new(Mutex::new(Vec::new()));
-    /*flag used to check wheter the sniffing process is active or not*/
+    /********************************************************/
+
+    /*** MUTEX WHERE PACKETS ARE PUSHED WHEN SNIFFED AND POPPED WHEN WROTE ON FILE ***/
+    let report_vector = Arc::new(Mutex::new(Vec::new()));
+    /*********************************************************************************/
+
+    /**** FLAG USED TO CHECK WHETER THE SNIFFING PROCESS IS ACTIVE OR NOT ****/
     let mut flag = false;
     let mut paused = false;
-    /*creating channels to send commands to threads*/
-    let  (mut tx_writer, rx_writer) = channel::<String>();
-    let  (mut tx_sniffer, rx_sniffer) = channel::<String>();
+    /*************************************************************************/
+
+    /************* CREATING CHANNELS TO COMMUNICATE WITH THREADS *************/
+    let  (mut tx_writer, _rx_writer) = channel::<String>();
+    let  (mut tx_sniffer, _rx_sniffer) = channel::<String>();
     let (rev_tx_writer, rev_rx_writer) = channel::<String>();
     let (rev_tx_sniffer, rev_rx_sniffer) = channel::<String>();
-    /*starting sniffing*/
+    /*************************************************************************/
+
+    /******************************** START SNIFFING ********************************/
     loop {
-        let mut string = get_user_commands();
+        //Acquire command from the user
+        let string = get_user_commands();
         match string.as_str() {
+            //start case
             "start" => {
                 if flag == true && paused == false { println!("Sniffing yet!"); } else {
                     /*starting sniffing and writing thread*/
@@ -71,6 +72,7 @@ fn main() {
                     flag = true;
                 }
             }
+            //stop case
             "pause" => {
                 if flag == false && paused == false { println!("No active sniffing!"); } else {
                     tx_writer.send(String::from("pause")).unwrap();
@@ -85,6 +87,7 @@ fn main() {
                     paused = true;
                 }
             }
+            //resume case
             "resume" => {
                 if flag == true && paused == false { println!("Sniffing yet!"); } else {
                     /*starting sniffing and writing thread*/
@@ -102,6 +105,7 @@ fn main() {
                     paused = false;
                 }
             }
+            //stop case
             "stop" => {
                 println!("Terminating program");
                 if flag == true {
@@ -114,7 +118,7 @@ fn main() {
                     println!("{}", notify);
                 }
                 println!("Done!");
-                flag = false;
+                //flag = false;
                 break;
             }
             _ => {
@@ -122,5 +126,5 @@ fn main() {
             }
         }
     }
-    /******************************************************/
+    /********************************************************************************/
 }

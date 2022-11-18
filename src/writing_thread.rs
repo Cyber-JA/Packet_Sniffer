@@ -1,22 +1,12 @@
+#![allow(non_snake_case)]
 use std::fs::{File, OpenOptions};
-use std::io::{BufReader, BufWriter};
-use mpsc::Receiver;
-use std::cell::Ref;
-use std::error::Error;
-use std::sync::{Arc, mpsc, Mutex};
-use std::sync::mpsc::{channel, Sender, SyncSender, TryRecvError};
+use std::sync::{Arc, Mutex};
+use std::sync::mpsc::{channel, Sender, TryRecvError};
 use std::thread;
-use std::thread::sleep;
 use std::time::Duration;
-use pcap::{Device, Packet};
-use pktparse::ethernet::{EtherType, MacAddress};
-use pktparse::ip::IPProtocol;
 use report_packet::ReportPacket;
-use crate::print_format::{print, fmt_for_file};
+use crate::print_format::{fmt_for_file};
 use crate::report_packet::report_packet;
-use std::io::prelude::*;
-use std::path::PathBuf;
-#[allow(non_snake_case)]
 pub fn write_file(file_name: String, timeout: u16, report_vector : Arc<Mutex<Vec<ReportPacket>>>, /*rx_writer: &Receiver<String>,*/ rev_tx_writer: Sender<String>) -> Sender<String> {
     /****************** WRITER THREAD *******************/
     let ( tx_writer, rx_writer) = channel::<String>();
@@ -31,7 +21,7 @@ pub fn write_file(file_name: String, timeout: u16, report_vector : Arc<Mutex<Vec
         rev_tx_writer.send(String::from("writer ready!")).unwrap();
         loop {
             let handle = rx_writer.try_recv();
-            println!("writer: {:?}", handle);
+            //println!("writer: {:?}", handle);
             match handle {
                 Ok(_) => { break; },
                 Err(error) => { if error != TryRecvError::Empty && error != TryRecvError::Disconnected { panic!("Unexpected error in writer thread! Panicking...{}", error) } },

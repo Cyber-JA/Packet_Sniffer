@@ -1,10 +1,8 @@
-#[allow(non_snake_case)]
+#![allow(non_snake_case)]
 pub mod report_packet {
     use std::net::{Ipv4Addr, Ipv6Addr};
-    use pktparse::ethernet;
-    use pktparse::ethernet::{EthernetFrame, EtherType, MacAddress};
+    use pktparse::ethernet::{EtherType, MacAddress};
     use pktparse::ip::IPProtocol;
-    use pktparse::ipv4::IPv4Header;
 
     //struct used to represent packet structure
     #[derive(Debug, Clone, Copy)]

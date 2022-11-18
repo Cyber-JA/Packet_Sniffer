@@ -1,19 +1,14 @@
-use mpsc::Receiver;
-use std::ops::Deref;
-use std::sync::{Arc, mpsc, Mutex};
-use std::sync::mpsc::{channel, Sender, SyncSender, TryRecvError};
+#![allow(non_snake_case)]
+use std::sync::{Arc, Mutex};
+use std::sync::mpsc::{channel, Sender, TryRecvError};
 use std::thread;
-use pcap::{Capture, Device, Error, Inactive, Packet};
-use pktparse::ethernet::{EtherType, MacAddress};
-use pktparse::ip::IPProtocol;
+use pcap::{Device};
 use report_packet::ReportPacket;
-use crate::lib;
-use crate::print_format::print;
 use crate::report_packet::report_packet;
 use crate::parsing::parse;
-#[allow(non_snake_case)]
+
 //function used by the thread that must sniff packet
-pub fn sniff(net_adapter: usize, report_vector : Arc<Mutex<Vec<ReportPacket>>>, filter: String, /*rx_sniffer: &Receiver<String>,*/ rev_tx_sniffer: Sender<String>) -> Sender<String> {
+pub fn sniff(net_adapter: usize, report_vector : Arc<Mutex<Vec<ReportPacket>>>, _filter: String, /*rx_sniffer: &Receiver<String>,*/ rev_tx_sniffer: Sender<String>) -> Sender<String> {
 
 /****************** SNIFFING THREAD *******************/
     let (tx_sniffer, rx_sniffer) = channel::<String>();
@@ -26,19 +21,19 @@ pub fn sniff(net_adapter: usize, report_vector : Arc<Mutex<Vec<ReportPacket>>>, 
             .unwrap();
 
         rev_tx_sniffer.send(String::from("sniffer ready!")).unwrap();
-        while let handle = rx_sniffer.try_recv(){
-            let (packet) = cap.next_packet().unwrap();
-            println!("reader: {:?}", handle);
+        while let Ok(packet) = cap.next_packet(){
+            let handle = rx_sniffer.try_recv();
+            //println!("reader: {:?}", handle);
             match handle {
                 Ok(_) => { break; },
                 Err(error) => { if error != TryRecvError::Empty && error != TryRecvError::Disconnected { println!("Unexpected error in sniffer thread...{}", error); } },
             };
             let report = parse(packet).clone();
-            let mut report_vectory_copy = report_vector.clone();
+            let report_vector_copy = report_vector.clone();
             thread::Builder::new()
                 .name("reporter".into()).spawn(move || {
-                insert_into_report(&report_vectory_copy, report);
-            });
+                insert_into_report(&report_vector_copy, report);
+            }).unwrap();
         }
         rev_tx_sniffer.send(String::from("Stopping sniffer thread")).unwrap();
     }).unwrap();
