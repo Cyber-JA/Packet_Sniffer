@@ -1,4 +1,5 @@
 use crate::lib::report_packet::{Address, ReportPacket};
+use nom::bytes;
 use pcap::Packet;
 use pktparse::ethernet::EtherType;
 use pktparse::ethernet::EtherType::IPv4;
@@ -7,28 +8,27 @@ use pktparse::ip::IPProtocol;
 use pktparse::ip::IPProtocol::{Other, TCP, UDP};
 use std::net::{Ipv4Addr, Ipv6Addr};
 use std::time::{Duration, Instant, SystemTime};
-use nom::bytes;
 
 //main general function used by the sniffing thread
-pub fn parse(packet: Packet, time : Instant, start_time : u128) -> ReportPacket {
+pub fn parse(packet: Packet, time: Instant, start_time: u128) -> ReportPacket {
     let report = parse_ether(packet, time, start_time);
     report
 }
 
 /***********PARSING EACH PROTOCOL**********/
-fn parse_ether(packet: Packet, time : Instant, start_time : u128) -> ReportPacket {
+fn parse_ether(packet: Packet, time: Instant, start_time: u128) -> ReportPacket {
     let mut report = ReportPacket::new(
         EtherType::ARP,
-        Address::IPv4Addr(Ipv4Addr::new(0,0,0,0)),
-        Address::IPv4Addr(Ipv4Addr::new(0,0,0,0)),
+        Address::IPv4Addr(Ipv4Addr::new(0, 0, 0, 0)),
+        Address::IPv4Addr(Ipv4Addr::new(0, 0, 0, 0)),
         IPProtocol::Other(0),
         0,
         0,
         0,
-        0.0
+        0.0,
     );
     report.bytes_exchanged = packet.header.len;
-    report.timestamp = (time.elapsed().as_millis() + start_time)  as f64 / 1000.0;
+    report.timestamp = (time.elapsed().as_millis() + start_time) as f64 / 1000.0;
     if let Ok((payload, frame)) = pktparse::ethernet::parse_ethernet_frame(packet.data) {
         report.l3_protocol = frame.ethertype;
         //parsing ether frame to get l3 protocol
@@ -98,8 +98,26 @@ fn parse_ipv6(payload: &[u8], mut report: ReportPacket) -> ReportPacket {
 fn parse_arp(payload: &[u8], mut report: ReportPacket) -> ReportPacket {
     if let Ok((_payload, header)) = pktparse::arp::parse_arp_pkt(payload) {
         report.l3_protocol = EtherType::ARP;
-        report.source_ip = Address::MacAddr(header.src_mac);
-        report.dest_ip = Address::MacAddr(header.dest_mac);
+        let source_mac = format!(
+            "{:02x}:{:02x}:{:02x}:{:02x}:{:02x}:{:02x}",
+            header.src_mac.0[0],
+            header.src_mac.0[1],
+            header.src_mac.0[2],
+            header.src_mac.0[3],
+            header.src_mac.0[4],
+            header.src_mac.0[5]
+        );
+        report.source_ip = Address::MacAddr(source_mac);
+        let dest_mac = format!(
+            "{:02x}:{:02x}:{:02x}:{:02x}:{:02x}:{:02x}",
+            header.dest_mac.0[0],
+            header.dest_mac.0[1],
+            header.dest_mac.0[2],
+            header.dest_mac.0[3],
+            header.dest_mac.0[4],
+            header.dest_mac.0[5]
+        );
+        report.dest_ip = Address::MacAddr(dest_mac);
     }
     report
 }

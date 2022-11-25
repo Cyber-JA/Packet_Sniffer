@@ -4,7 +4,7 @@ use std::net::{Ipv4Addr, Ipv6Addr};
 use crate::lib::report_packet::Address::{IPv4Addr, IPv6Addr, MacAddr};
 
 //struct used to represent packet structure
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone)]
 pub struct ReportPacket {
     pub l3_protocol: EtherType,
     pub source_ip: Address,
@@ -17,11 +17,11 @@ pub struct ReportPacket {
     //time : pcap::timeval
 }
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone)]
 pub enum Address{
     IPv4Addr(Ipv4Addr),
     IPv6Addr(Ipv6Addr),
-    MacAddr(MacAddress)
+    MacAddr(String)
 }
 
 pub struct Report {
@@ -87,7 +87,7 @@ impl ReportPacket {
     }
 impl PartialEq for Address{
     fn eq(&self, other: &Self) -> bool {
-        match (*self, *other){
+        match (self.clone(), other.clone()){
             (IPv4Addr(ref a), IPv4Addr(ref b)) => a == b,
             (IPv6Addr(ref a), IPv6Addr(ref b)) => a == b,
             (MacAddr(ref a), MacAddr(ref b)) => a == b,

@@ -35,13 +35,13 @@ pub fn fmt_for_file(packet: &Report, file: &mut File) {
     let string;
     if packet.l4_protocol == IPProtocol::Other(0) {
         string = format!(
-            "{:?} -> {:?} | protocol : {:?} | bytes : {} | first_exchange : {:.3} | last_exchange : {:.3}\n",
+            "{:?} -> {:?} | {:?} | bytes : {} | first_exchange : {:.3} | last_exchange : {:.3}\n",
             packet.source_ip, packet.dest_ip, packet.l3_protocol, packet.bytes_exchanged, packet.timestamp_first, packet.timestamp_last
         );
     }
     else{
         string = format!(
-            "{:?} -> {:?} | protocol : {:?} | source_port : {:?} -> dest_port : {:?} | bytes : {} | first_exchange : {:.3} | last_exchange : {:.3}\n",
+            "{:?} -> {:?} | {:?} ({:?} -> {:?}) | bytes : {} | first_exchange : {:.3} | last_exchange : {:.3}\n",
             packet.source_ip, packet.dest_ip, packet.l4_protocol, packet.source_port, packet.dest_port, packet.bytes_exchanged, packet.timestamp_first, packet.timestamp_last
         )
     }
