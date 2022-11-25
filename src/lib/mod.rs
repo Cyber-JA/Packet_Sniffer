@@ -8,6 +8,7 @@ pub mod writing_thread;
 use crate::lib::cli::{get_cli, get_user_commands};
 use std::sync::mpsc::channel;
 use std::sync::{Arc, Mutex};
+use std::time::Instant;
 
 pub fn configure_and_run() -> () {
     /*******************READING FROM CLI******************/
@@ -45,12 +46,15 @@ pub fn configure_and_run() -> () {
     /*************************************************************************/
 
     /******************************** START SNIFFING ********************************/
+    let mut time = Instant::now();
+    let mut pause_time = Instant::now();
     loop {
         //Acquire command from the user
         let string = get_user_commands();
         match string.as_str() {
             //start case
             "start" => {
+                time = Instant::now();
                 if flag == true && paused == false {
                     println!("Sniffing yet!");
                 } else {
@@ -60,6 +64,8 @@ pub fn configure_and_run() -> () {
                         report_vector.clone(),
                         filter.clone(),
                         /*&rx_sniffer,*/ rev_tx_sniffer.clone(),
+                        time,
+                        0
                     );
                     tx_writer = writing_thread::write_file(
                         output_file_name.clone(),
@@ -93,9 +99,12 @@ pub fn configure_and_run() -> () {
                     flag = false;
                     paused = true;
                 }
+                pause_time = Instant::now();
             }
             //resume case
             "resume" => {
+                let resume_time =  time.elapsed().as_millis() - pause_time.elapsed().as_millis();
+                time = Instant::now();
                 if flag == true && paused == false {
                     println!("Sniffing yet!");
                 } else {
@@ -105,6 +114,8 @@ pub fn configure_and_run() -> () {
                         report_vector.clone(),
                         filter.clone(),
                         /*&rx_sniffer,*/ rev_tx_sniffer.clone(),
+                        time,
+                        resume_time
                     );
                     tx_writer = writing_thread::write_file(
                         output_file_name.clone(),

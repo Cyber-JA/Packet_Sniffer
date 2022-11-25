@@ -1,15 +1,18 @@
 use crate::lib::parsing::parse;
-use crate::lib::report_packet::ReportPacket;
+use crate::lib::report_packet::{Report, ReportPacket};
 use pcap::Device;
 use std::sync::mpsc::{channel, Sender, TryRecvError};
 use std::sync::{Arc, Mutex};
 use std::thread;
+use std::time::Instant;
 
 pub fn sniff(
     net_adapter: usize,
-    report_vector: Arc<Mutex<Vec<ReportPacket>>>,
+    report_vector: Arc<Mutex<Vec<Report>>>,
     _filter: String,
     /*rx_sniffer: &Receiver<String>,*/ rev_tx_sniffer: Sender<String>,
+    time : Instant,
+    start_time : u128
 ) -> Sender<String> {
     /****************** SNIFFING THREAD *******************/
     let (tx_sniffer, rx_sniffer) = channel::<String>();
@@ -37,7 +40,7 @@ pub fn sniff(
                         }
                     }
                 };
-                let report = parse(packet).clone();
+                let report = parse(packet, time, start_time).clone();
                 let report_vector_copy = report_vector.clone();
                 thread::Builder::new()
                     .name("reporter".into())
@@ -55,10 +58,41 @@ pub fn sniff(
     tx_sniffer
 }
 
-pub fn insert_into_report(
-    report_vector: &Arc<Mutex<Vec<ReportPacket>>>,
-    packet: ReportPacket,
-) -> () {
+pub fn insert_into_report(report_vector: &Arc<Mutex<Vec<Report>>>, packet: ReportPacket) -> () {
     let mut vec = report_vector.lock().unwrap();
-    vec.push(packet);
+    let mut found = false;
+    vec.iter_mut().for_each(|p| {
+        if p.source_ip == packet.source_ip
+            && p.source_port == packet.source_port
+            && p.dest_ip == packet.dest_ip
+            && p.dest_port == packet.dest_port
+        {
+            p.bytes_exchanged = p.bytes_exchanged + packet.bytes_exchanged;
+            if p.timestamp_first == 0.0 {
+                p.timestamp_first = packet.timestamp;
+                p.timestamp_last = packet.timestamp;
+            } else {
+                p.timestamp_last = packet.timestamp;
+            }
+            p.l3_protocol = packet.l3_protocol;
+            p.l4_protocol = packet.l4_protocol;
+            found = true;
+        }
+    });
+    if !found {
+        let mut l3_protocol = packet.l3_protocol;
+        let mut l4_protocol = packet.l4_protocol;
+        let report_to_insert = Report::new(
+            l3_protocol,
+            packet.source_ip,
+            packet.dest_ip,
+            l4_protocol,
+            packet.source_port,
+            packet.dest_port,
+            packet.bytes_exchanged,
+            packet.timestamp,
+            packet.timestamp,
+        );
+        vec.push(report_to_insert)
+    }
 }

@@ -1,6 +1,7 @@
 use crate::lib::print_format::fmt_for_file;
-use crate::lib::report_packet::ReportPacket;
+use crate::lib::report_packet::{Report, ReportPacket};
 use std::fs::{File, OpenOptions};
+use std::io::Seek;
 use std::sync::mpsc::{channel, Sender, TryRecvError};
 use std::sync::{Arc, Mutex};
 use std::thread;
@@ -9,7 +10,7 @@ use std::time::Duration;
 pub fn write_file(
     file_name: String,
     timeout: u16,
-    report_vector: Arc<Mutex<Vec<ReportPacket>>>,
+    report_vector: Arc<Mutex<Vec<Report>>>,
     /*rx_writer: &Receiver<String>,*/ rev_tx_writer: Sender<String>,
 ) -> Sender<String> {
     /****************** WRITER THREAD *******************/
@@ -20,7 +21,7 @@ pub fn write_file(
             let mut file = OpenOptions::new()
                 .read(true)
                 .write(true)
-                .append(true)
+                .truncate(true)
                 .create(true)
                 .open(file_name)
                 .unwrap(); //file opened in append mode, read-write mode, if not exists, create it
@@ -50,14 +51,14 @@ pub fn write_file(
 }
 
 pub fn write_report(
-    report_vector: &Arc<Mutex<Vec<ReportPacket>>>,
+    report_vector: &Arc<Mutex<Vec<Report>>>,
     timeout: u64,
     file: &mut File,
 ) -> () {
+    file.rewind().unwrap();
     thread::sleep(Duration::from_millis(timeout));
     //println!("----------------------------------------------------------------------------------");
     let mut vec = report_vector.lock().unwrap();
-    vec.iter().for_each(|&p| fmt_for_file(p, file));
+    vec.iter().for_each(|p| fmt_for_file(p, file));
     println!("wrote file");
-    vec.clear();
 }
