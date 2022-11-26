@@ -1,4 +1,5 @@
-use pktparse::ethernet::{EtherType, MacAddress};
+use std::fmt::{Debug, Formatter};
+use pktparse::ethernet::{EtherType};
 use pktparse::ip::IPProtocol;
 use std::net::{Ipv4Addr, Ipv6Addr};
 use crate::lib::report_packet::Address::{IPv4Addr, IPv6Addr, MacAddr};
@@ -21,7 +22,17 @@ pub struct ReportPacket {
 pub enum Address{
     IPv4Addr(Ipv4Addr),
     IPv6Addr(Ipv6Addr),
-    MacAddr(String)
+    MacAddr(MACAddress)
+}
+
+#[derive(Clone)]
+pub struct MACAddress{
+    first : u8,
+    second : u8,
+    third : u8,
+    fourth : u8,
+    fifth : u8,
+    sixth : u8
 }
 
 pub struct Report {
@@ -93,5 +104,23 @@ impl PartialEq for Address{
             (MacAddr(ref a), MacAddr(ref b)) => a == b,
             _ => false,
         }
+    }
+}
+
+impl MACAddress{
+    pub fn new (first : u8, second : u8, third : u8, fourth : u8, fifth : u8, sixth : u8) -> Self{
+        MACAddress{first, second, third, fourth, fifth, sixth}
+    }
+}
+
+impl PartialEq for MACAddress{
+    fn eq(&self, other: &Self) -> bool {
+        self.first == other.first && self.second == other.second && self.third == other.third && self.fourth == other.fourth && self.fifth == other.fifth && self.sixth == other.sixth
+    }
+}
+
+impl Debug for MACAddress{
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{:02x}:{:02x}:{:02x}:{:02x}:{:02x}:{:02x}", self.first, self.second, self.third, self.fourth, self.fifth, self.sixth)
     }
 }

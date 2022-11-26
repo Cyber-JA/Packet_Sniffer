@@ -80,8 +80,8 @@ pub fn insert_into_report(report_vector: &Arc<Mutex<Vec<Report>>>, packet: Repor
         }
     });
     if !found {
-        let mut l3_protocol = packet.l3_protocol;
-        let mut l4_protocol = packet.l4_protocol;
+        let l3_protocol = packet.l3_protocol;
+        let l4_protocol = packet.l4_protocol;
         let report_to_insert = Report::new(
             l3_protocol,
             packet.source_ip,

@@ -1,7 +1,6 @@
-use crate::lib::report_packet::{Report, ReportPacket};
+use crate::lib::report_packet::{Report};
 use std::fs::File;
 use std::io::Write;
-use clap::ValueHint::Other;
 use pktparse::ip::IPProtocol;
 
 #[warn(dead_code)]

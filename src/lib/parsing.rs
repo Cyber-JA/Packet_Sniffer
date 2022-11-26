@@ -1,13 +1,11 @@
-use crate::lib::report_packet::{Address, ReportPacket};
-use nom::bytes;
+use crate::lib::report_packet::{Address, ReportPacket, MACAddress};
 use pcap::Packet;
 use pktparse::ethernet::EtherType;
 use pktparse::ethernet::EtherType::IPv4;
-use pktparse::ethernet::MacAddress;
 use pktparse::ip::IPProtocol;
 use pktparse::ip::IPProtocol::{Other, TCP, UDP};
-use std::net::{Ipv4Addr, Ipv6Addr};
-use std::time::{Duration, Instant, SystemTime};
+use std::net::{Ipv4Addr};
+use std::time::{Instant};
 
 //main general function used by the sniffing thread
 pub fn parse(packet: Packet, time: Instant, start_time: u128) -> ReportPacket {
@@ -98,33 +96,15 @@ fn parse_ipv6(payload: &[u8], mut report: ReportPacket) -> ReportPacket {
 fn parse_arp(payload: &[u8], mut report: ReportPacket) -> ReportPacket {
     if let Ok((_payload, header)) = pktparse::arp::parse_arp_pkt(payload) {
         report.l3_protocol = EtherType::ARP;
-        let source_mac = format!(
-            "{:02x}:{:02x}:{:02x}:{:02x}:{:02x}:{:02x}",
-            header.src_mac.0[0],
-            header.src_mac.0[1],
-            header.src_mac.0[2],
-            header.src_mac.0[3],
-            header.src_mac.0[4],
-            header.src_mac.0[5]
-        );
-        report.source_ip = Address::MacAddr(source_mac);
-        let dest_mac = format!(
-            "{:02x}:{:02x}:{:02x}:{:02x}:{:02x}:{:02x}",
-            header.dest_mac.0[0],
-            header.dest_mac.0[1],
-            header.dest_mac.0[2],
-            header.dest_mac.0[3],
-            header.dest_mac.0[4],
-            header.dest_mac.0[5]
-        );
-        report.dest_ip = Address::MacAddr(dest_mac);
+        report.source_ip = Address::MacAddr(MACAddress::new(header.src_mac.0[0],header.src_mac.0[1], header.src_mac.0[2], header.src_mac.0[3], header.src_mac.0[4], header.src_mac.0[5]));
+        report.dest_ip = Address::MacAddr(MACAddress::new(header.dest_mac.0[0],header.dest_mac.0[1], header.dest_mac.0[2], header.dest_mac.0[3], header.dest_mac.0[4], header.dest_mac.0[5]));
     }
     report
 }
 
 //TCP PARSING, TO COMPLETE
 fn parse_tcp(payload: &[u8], mut report: ReportPacket) -> ReportPacket {
-    if let Ok((p, header)) = pktparse::tcp::parse_tcp_header(payload) {
+    if let Ok((_p, header)) = pktparse::tcp::parse_tcp_header(payload) {
         report.source_port = header.source_port;
         report.dest_port = header.dest_port;
         report.l4_protocol = TCP;
@@ -134,7 +114,7 @@ fn parse_tcp(payload: &[u8], mut report: ReportPacket) -> ReportPacket {
 
 //UDP PARSING, TO COMPLETE
 fn parse_udp(payload: &[u8], mut report: ReportPacket) -> ReportPacket {
-    if let Ok((udp_datagram, header)) = pktparse::udp::parse_udp_header(payload) {
+    if let Ok((_udp_datagram, header)) = pktparse::udp::parse_udp_header(payload) {
         report.source_port = header.source_port;
         report.dest_port = header.dest_port;
         report.l4_protocol = UDP;
@@ -145,7 +125,7 @@ fn parse_udp(payload: &[u8], mut report: ReportPacket) -> ReportPacket {
 
 //ICMP PARSING, TO COMPLETE
 fn parse_icmp(payload: &[u8], mut report: ReportPacket) -> ReportPacket {
-    if let Ok((_icmp_payload, header)) = pktparse::icmp::parse_icmp_header(payload) {
+    if let Ok((_icmp_payload, _header)) = pktparse::icmp::parse_icmp_header(payload) {
         //report.source_port = header.source_port;
         //report.dest_port = header.dest_port;
         report.l3_protocol = IPv4;

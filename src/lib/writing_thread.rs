@@ -1,5 +1,5 @@
 use crate::lib::print_format::fmt_for_file;
-use crate::lib::report_packet::{Report, ReportPacket};
+use crate::lib::report_packet::{Report};
 use std::fs::{File, OpenOptions};
 use std::io::Seek;
 use std::sync::mpsc::{channel, Sender, TryRecvError};
@@ -58,7 +58,7 @@ pub fn write_report(
     file.rewind().unwrap();
     thread::sleep(Duration::from_millis(timeout));
     //println!("----------------------------------------------------------------------------------");
-    let mut vec = report_vector.lock().unwrap();
+    let vec = report_vector.lock().unwrap();
     vec.iter().for_each(|p| fmt_for_file(p, file));
     println!("wrote file");
 }
