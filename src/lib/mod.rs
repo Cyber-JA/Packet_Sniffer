@@ -24,10 +24,10 @@ pub fn configure_and_run() -> () {
 
     /************ PARAMETERS TO PASS TO THREADS *************/
     let net_adapter_cp = args.net_adapter.clone();
-    let filter = args.filter.clone();
+    let filter = args.filter;
     let output_file_name = args.output_file_name.clone();
     let timeout = args.timeout.clone();
-    println!("VETTORE DI FILTRI {:?}", args.filters_list);
+    //println!("VETTORE DI FILTRI {:?}", args.filters_list);
     /********************************************************/
 
     /*** MUTEX WHERE PACKETS ARE PUSHED WHEN SNIFFED AND POPPED WHEN WROTE ON FILE ***/
@@ -66,7 +66,7 @@ pub fn configure_and_run() -> () {
                         filter.clone(),
                         /*&rx_sniffer,*/ rev_tx_sniffer.clone(),
                         time,
-                        0
+                        0,
                     );
                     tx_writer = writing_thread::write_file(
                         output_file_name.clone(),
