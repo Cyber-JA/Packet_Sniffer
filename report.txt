@@ -1,0 +1,7 @@
+IPv4Addr(0.0.0.0) -> IPv4Addr(0.0.0.0) | Other(0) | bytes : 420 | first_exchange : 3.789 | last_exchange : 3.789
+IPv4Addr(192.168.1.1) -> IPv4Addr(192.168.1.219) | UDP (53 -> 58509) | bytes : 180 | first_exchange : 3.789 | last_exchange : 3.789
+IPv4Addr(192.168.1.219) -> IPv4Addr(151.21.209.146) | TCP (54129 -> 443) | bytes : 911 | first_exchange : 3.790 | last_exchange : 3.819
+MacAddr(98:22:ef:bd:14:21) -> MacAddr(b8:d5:26:94:cd:a4) | ARP | bytes : 42 | first_exchange : 3.789 | last_exchange : 3.789
+IPv4Addr(192.168.1.219) -> IPv4Addr(192.168.1.1) | UDP (58509 -> 53) | bytes : 74 | first_exchange : 3.789 | last_exchange : 3.789
+MacAddr(b8:d5:26:94:cd:a4) -> MacAddr(98:22:ef:bd:14:21) | ARP | bytes : 60 | first_exchange : 3.789 | last_exchange : 3.789
+IPv4Addr(151.21.209.146) -> IPv4Addr(192.168.1.219) | TCP (443 -> 54129) | bytes : 11116 | first_exchange : 3.790 | last_exchange : 3.819
