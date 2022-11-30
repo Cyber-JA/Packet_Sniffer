@@ -8,10 +8,10 @@ use Option;
 /// time to sniff
 #[derive(Parser, Debug, Default)]
 #[command(
-author = "Caruso, Andorno, Fois",
-version,
-about = "A simple packet_sniffer",
-long_about = "A simple packet_sniffer in Rust language. All rights reserved"
+    author = "Caruso, Andorno, Fois",
+    version,
+    about = "A simple packet_sniffer",
+    long_about = "A simple packet_sniffer in Rust language. All rights reserved"
 )]
 pub struct Args {
     /// specify net_adapter, do not use this option to see a list of available devices
@@ -163,8 +163,8 @@ pub fn select_filters(filter: String) -> String {
         }
         _ => {
             string_to_ret = filter.clone();
+            }
         }
-    }
     return string_to_ret;
 }
 
@@ -190,6 +190,7 @@ pub fn select_filters(filter: String) -> String {
     }
     return flag;
 }
+
 pub fn filters_as_vec(filter: String) -> Vec<String> {
     let mut vec_of_filters = Vec::new();
     for f in filter.as_str().trim().split(" ") {
@@ -197,6 +198,7 @@ pub fn filters_as_vec(filter: String) -> Vec<String> {
     }
     vec_of_filters
 }
+
 pub fn select_among_filters() -> Vec<String> {
     let mut list = Vec::new();
     loop {
@@ -219,6 +221,7 @@ pub fn select_among_filters() -> Vec<String> {
     }
     list
 }
+
 pub fn select_among_filters_with_provided_input(input_string: String) -> Vec<String> {
     let mut list = Vec::new();
     println!("provided input: {}", input_string);
