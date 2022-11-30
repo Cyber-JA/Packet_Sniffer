@@ -27,7 +27,7 @@ pub fn configure_and_run() -> () {
     let filter = args.filter.clone();
     let output_file_name = args.output_file_name.clone();
     let timeout = args.timeout.clone();
-    println!("VETTORE DI FILTRI {:?}", args.filters_list);
+    println!("VETTORE DI FILTRI {:?}", args.filter);
     /********************************************************/
 
     /*** MUTEX WHERE PACKETS ARE PUSHED WHEN SNIFFED AND POPPED WHEN WROTE ON FILE ***/

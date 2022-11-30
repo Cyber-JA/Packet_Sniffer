@@ -26,12 +26,18 @@ pub struct Args {
     #[arg(short, long, default_value_t = 2000)]
     pub(crate) timeout: u16, //in ms
 
-    /// specify filters to apply between quotes (e.g. TCP, reports TCP's packets only), type "list" to see a list of available filters
+    /*/// specify filters to apply between quotes (e.g. TCP, reports TCP's packets only), type "list" to see a list of available filters
     #[clap(short = 'f', long, default_value = "")]
     pub(crate) filter: String,
+*/
+    /// specify filters to apply between quotes (e.g. TCP, reports TCP's packets only), do not specify parameters to see a list of available filters
+    #[clap(short = 'f', long, default_value = "no")]
+    pub(crate) filter: String,
 
-    pub(crate) filters_list: Vec<String>,
+    //pub(crate) filters_list: Vec<String>,
 }
+
+/* WITH STRING FILTER AND PCAP FILTERING WITH BPF SYNTAX*/
 
 //function used to handle cli arguments and eventually choices by the user (e.g. select a device if not known one)
 pub fn get_cli() -> Args {
@@ -39,7 +45,8 @@ pub fn get_cli() -> Args {
     let n = args.net_adapter.clone();
     let f = args.filter.clone();
     args.net_adapter = select_device(n);
-    args.filters_list = select_filters(f);
+    //args.filters_list = select_filters(f);
+    args.filter = select_filters(f);
     args //struct returned with filled value
 }
 
@@ -124,12 +131,15 @@ pub fn show_filters_available() {
     println!("> arp");
 }
 
-pub fn select_filters(filter: String) -> Vec<String> {
+/*pub fn select_filters(filter: String) -> Vec<String> {
     let mut vec_to_ret = Vec::new();
     match filter.as_str() {
         "list" => {
             show_filters_available();
             vec_to_ret = select_among_filters();
+        }
+        "" => {
+            vec_to_ret = select_among_filters_with_provided_input(filter.clone());
         }
         _ => {
             if are_filters_acceptable(filter.clone()) == true {
@@ -138,9 +148,27 @@ pub fn select_filters(filter: String) -> Vec<String> {
         }
     }
     return vec_to_ret;
+}*/
+
+pub fn select_filters(filter: String) -> String {
+    let mut string_to_ret = String::new();
+    match filter.as_str() {
+        "list" => {
+            show_filters_available();
+            string_to_ret = read_input_string();
+        }
+        "no" => {
+            println!("No filters applied, all the packets will be shown...");
+            stdout().flush().unwrap();
+        }
+        _ => {
+            string_to_ret = filter.clone();
+            }
+        }
+    return string_to_ret;
 }
 
-pub fn are_filters_acceptable(filter: String) -> bool {
+/*pub fn are_filters_acceptable(filter: String) -> bool {
     let mut list: Vec<String> = Vec::new();
     list.push(String::from("tcp"));
     list.push(String::from("udp"));
@@ -224,3 +252,4 @@ pub fn select_among_filters_with_provided_input(input_string: String) -> Vec<Str
     }
     list
 }
+*/
