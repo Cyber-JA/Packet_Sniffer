@@ -9,10 +9,10 @@ use std::time::Instant;
 pub fn sniff(
     net_adapter: usize,
     report_vector: Arc<Mutex<Vec<Report>>>,
-    filter: String,
+    _filter: String,
     /*rx_sniffer: &Receiver<String>,*/ rev_tx_sniffer: Sender<String>,
     time : Instant,
-    start_time : u128,
+    start_time : u128
 ) -> Sender<String> {
     /****************** SNIFFING THREAD *******************/
     let (tx_sniffer, rx_sniffer) = channel::<String>();
@@ -26,12 +26,6 @@ pub fn sniff(
                 .open()
                 .unwrap();
 
-            if !filter.as_str().is_empty(){
-                match cap.filter(filter.as_str(), false){
-                    Ok(_) => {println!("OK");},
-                    Err(e) => { println!("ERROREEEEEEEEEEEEEEEEEEEEE"); },
-                }
-            }
             rev_tx_sniffer.send(String::from("sniffer ready!")).unwrap();
             while let Ok(packet) = cap.next_packet() {
                 let handle = rx_sniffer.try_recv();

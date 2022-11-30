@@ -71,31 +71,31 @@ impl ReportPacket {
         }
     }
 }
-    impl Report {
-        pub fn new(
-            l3_protocol: EtherType,
-            source_ip: Address,
-            dest_ip: Address,
-            l4_protocol: IPProtocol,
-            source_port: u16,
-            dest_port: u16,
-            bytes_exchanged: u32,
-            timestamp_first: f64,
-            timestamp_last: f64
-        ) -> Self {
-            Report {
-                l3_protocol,
-                source_ip,
-                dest_ip,
-                l4_protocol,
-                source_port,
-                dest_port,
-                bytes_exchanged,
-                timestamp_first,
-                timestamp_last
-            }
+impl Report {
+    pub fn new(
+        l3_protocol: EtherType,
+        source_ip: Address,
+        dest_ip: Address,
+        l4_protocol: IPProtocol,
+        source_port: u16,
+        dest_port: u16,
+        bytes_exchanged: u32,
+        timestamp_first: f64,
+        timestamp_last: f64
+    ) -> Self {
+        Report {
+            l3_protocol,
+            source_ip,
+            dest_ip,
+            l4_protocol,
+            source_port,
+            dest_port,
+            bytes_exchanged,
+            timestamp_first,
+            timestamp_last
         }
     }
+}
 impl PartialEq for Address{
     fn eq(&self, other: &Self) -> bool {
         match (self.clone(), other.clone()){
