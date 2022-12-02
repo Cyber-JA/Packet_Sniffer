@@ -1,5 +1,5 @@
 use crate::lib::print_format::fmt_for_file;
-use crate::lib::report_packet::{Report};
+use crate::lib::report_packet::Report;
 use std::fs::{File, OpenOptions};
 use std::io::Seek;
 use std::sync::mpsc::{channel, Sender, TryRecvError};
@@ -30,7 +30,7 @@ pub fn write_file(
                 let handle = rx_writer.try_recv();
                 //println!("writer: {:?}", handle);
                 match handle {
-                    Ok(_) => {
+                    Ok(_) => { println!("writer {:?}", handle);
                         break;
                     }
                     Err(error) => {
@@ -50,15 +50,11 @@ pub fn write_file(
     tx_writer
 }
 
-pub fn write_report(
-    report_vector: &Arc<Mutex<Vec<Report>>>,
-    timeout: u64,
-    file: &mut File,
-) -> () {
+pub fn write_report(report_vector: &Arc<Mutex<Vec<Report>>>, timeout: u64, file: &mut File) -> () {
     file.rewind().unwrap();
     thread::sleep(Duration::from_millis(timeout));
     //println!("----------------------------------------------------------------------------------");
     let vec = report_vector.lock().unwrap();
     vec.iter().for_each(|p| fmt_for_file(p, file));
-    println!("wrote file");
+    //println!("wrote file");
 }
