@@ -3,6 +3,7 @@ use pcap::Device;
 use std::io;
 use std::io::{stdout, BufRead, Write};
 use Option;
+use std::num::ParseIntError;
 
 //CLI developed using
 /// time to sniff
@@ -57,13 +58,19 @@ pub fn read_input_string() -> String {
 }
 
 pub fn read_input_usize(len: usize) -> usize {
+    let check;
+    let mut my_int = 0;
     println!("Waiting for user input...");
     stdout().flush().unwrap();
     println!(">>>");
     stdout().flush().unwrap();
     let mut user_input = String::new();
     io::stdin().lock().read_line(&mut user_input).unwrap();
-    let my_int = user_input.trim().parse::<usize>().unwrap();
+    check = user_input.trim().parse::<usize>();
+    match check {
+        Ok(val) => { my_int = val; }
+        Err(_) => { println!("Invalid input!"); my_int = read_input_usize(len.clone());}
+    }
     if my_int < 1 || my_int > len {
         println!("Error! Insert a valid number:");
         stdout().flush().unwrap();
