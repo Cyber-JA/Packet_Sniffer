@@ -1,7 +1,7 @@
-use crate::lib::report_packet::{Report};
+use crate::lib::report_packet::Report;
+use pktparse::ip::IPProtocol;
 use std::fs::File;
 use std::io::Write;
-use pktparse::ip::IPProtocol;
 
 #[warn(dead_code)]
 /*pub fn print(packet: ReportPacket) {
@@ -35,10 +35,14 @@ pub fn fmt_for_file(packet: &Report, file: &mut File) {
     if packet.l4_protocol == IPProtocol::Other(0) {
         string = format!(
             "{:?} -> {:?} | {:?} | bytes : {} | first_exchange : {:.3} | last_exchange : {:.3}\n",
-            packet.source_ip, packet.dest_ip, packet.l3_protocol, packet.bytes_exchanged, packet.timestamp_first, packet.timestamp_last
+            packet.source_ip,
+            packet.dest_ip,
+            packet.l3_protocol,
+            packet.bytes_exchanged,
+            packet.timestamp_first,
+            packet.timestamp_last
         );
-    }
-    else{
+    } else {
         string = format!(
             "{:?} -> {:?} | {:?} ({:?} -> {:?}) | bytes : {} | first_exchange : {:.3} | last_exchange : {:.3}\n",
             packet.source_ip, packet.dest_ip, packet.l4_protocol, packet.source_port, packet.dest_port, packet.bytes_exchanged, packet.timestamp_first, packet.timestamp_last

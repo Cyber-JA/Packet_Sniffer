@@ -5,14 +5,31 @@ use std::sync::mpsc::{channel, Sender, TryRecvError};
 use std::sync::{Arc, Mutex};
 use std::thread;
 use std::time::Instant;
+use pktparse::ip::IPProtocol::TCP;
+
+pub struct LayersVectors {
+    l3_vector: Vec<String>,
+    l4_vector: Vec<String>,
+    l7_vector: Vec<String>
+}
+
+impl LayersVectors{
+    pub fn new()->Self{
+        LayersVectors{l3_vector: Vec::new(), l4_vector: Vec::new(), l7_vector: Vec::new()}
+    }
+
+    pub fn deserialize_filters(&mut self, filters: Vec<String>){
+        println!("{:?}", filters);
+    }
+}
 
 pub fn sniff(
     net_adapter: usize,
     report_vector: Arc<Mutex<Vec<Report>>>,
-    filter: String,
+    filter: Vec<String>,
     /*rx_sniffer: &Receiver<String>,*/ rev_tx_sniffer: Sender<String>,
-    time : Instant,
-    start_time : u128,
+    time: Instant,
+    start_time: u128,
 ) -> Sender<String> {
     /****************** SNIFFING THREAD *******************/
     let (tx_sniffer, rx_sniffer) = channel::<String>();
@@ -25,19 +42,22 @@ pub fn sniff(
                 .promisc(true)
                 .open()
                 .unwrap();
-
-            if !filter.as_str().is_empty(){
-                match cap.filter(filter.as_str(), false){
-                    Ok(_) => {println!("OK");},
-                    Err(e) => { println!("ERROREEEEEEEEEEEEEEEEEEEEE"); },
+            println!("{:?}", filter);
+            /*if !filter.as_str().is_empty() {
+                match cap.filter(filter.as_str(), false) {
+                    Err(e) => {
+                        println!("ERROREEEEEEEEEEEEEEEEEEEEE");
+                    }
+                    _ => {
+                        println!("Default");
+                    }
                 }
-            }
+            }*/
             rev_tx_sniffer.send(String::from("sniffer ready!")).unwrap();
-            while let Ok(packet) = cap.next_packet() {
-                let handle = rx_sniffer.try_recv();
+            while let handle = rx_sniffer.try_recv() {
                 //println!("reader: {:?}", handle);
                 match handle {
-                    Ok(_) => {
+                    Ok(_) => { println!("sniffer {:?}", handle);
                         break;
                     }
                     Err(error) => {
@@ -46,14 +66,22 @@ pub fn sniff(
                         }
                     }
                 };
+                let packet = cap.next_packet().unwrap();
+                println!("got packet");
+
+                println!("parsing");
                 let report = parse(packet, time, start_time).clone();
+                //if report.l4_protocol != TCP {continue}
+                println!("parsing done!");
                 let report_vector_copy = report_vector.clone();
+                println!("put into report");
                 thread::Builder::new()
                     .name("reporter".into())
                     .spawn(move || {
                         insert_into_report(&report_vector_copy, report);
                     })
                     .unwrap();
+                println!("report done, restarting");
             }
             rev_tx_sniffer
                 .send(String::from("Stopping sniffer thread"))
@@ -67,6 +95,7 @@ pub fn sniff(
 pub fn insert_into_report(report_vector: &Arc<Mutex<Vec<Report>>>, packet: ReportPacket) -> () {
     let mut vec = report_vector.lock().unwrap();
     let mut found = false;
+    println!("Inserting into report");
     vec.iter_mut().for_each(|p| {
         if p.source_ip == packet.source_ip
             && p.source_port == packet.source_port
@@ -99,6 +128,8 @@ pub fn insert_into_report(report_vector: &Arc<Mutex<Vec<Report>>>, packet: Repor
             packet.timestamp,
             packet.timestamp,
         );
-        vec.push(report_to_insert)
+        println!("almost");
+        vec.push(report_to_insert);
+        println!("OKKKK");
     }
 }

@@ -1,11 +1,11 @@
-use crate::lib::report_packet::{Address, ReportPacket, MACAddress};
+use crate::lib::report_packet::{Address, MACAddress, ReportPacket};
 use pcap::Packet;
 use pktparse::ethernet::EtherType;
 use pktparse::ethernet::EtherType::IPv4;
 use pktparse::ip::IPProtocol;
 use pktparse::ip::IPProtocol::{Other, TCP, UDP};
-use std::net::{Ipv4Addr};
-use std::time::{Instant};
+use std::net::Ipv4Addr;
+use std::time::Instant;
 
 //main general function used by the sniffing thread
 pub fn parse(packet: Packet, time: Instant, start_time: u128) -> ReportPacket {
@@ -96,8 +96,22 @@ fn parse_ipv6(payload: &[u8], mut report: ReportPacket) -> ReportPacket {
 fn parse_arp(payload: &[u8], mut report: ReportPacket) -> ReportPacket {
     if let Ok((_payload, header)) = pktparse::arp::parse_arp_pkt(payload) {
         report.l3_protocol = EtherType::ARP;
-        report.source_ip = Address::MacAddr(MACAddress::new(header.src_mac.0[0],header.src_mac.0[1], header.src_mac.0[2], header.src_mac.0[3], header.src_mac.0[4], header.src_mac.0[5]));
-        report.dest_ip = Address::MacAddr(MACAddress::new(header.dest_mac.0[0],header.dest_mac.0[1], header.dest_mac.0[2], header.dest_mac.0[3], header.dest_mac.0[4], header.dest_mac.0[5]));
+        report.source_ip = Address::MacAddr(MACAddress::new(
+            header.src_mac.0[0],
+            header.src_mac.0[1],
+            header.src_mac.0[2],
+            header.src_mac.0[3],
+            header.src_mac.0[4],
+            header.src_mac.0[5],
+        ));
+        report.dest_ip = Address::MacAddr(MACAddress::new(
+            header.dest_mac.0[0],
+            header.dest_mac.0[1],
+            header.dest_mac.0[2],
+            header.dest_mac.0[3],
+            header.dest_mac.0[4],
+            header.dest_mac.0[5],
+        ));
     }
     report
 }

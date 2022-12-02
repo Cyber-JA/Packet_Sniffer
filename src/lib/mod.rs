@@ -10,6 +10,65 @@ use std::sync::mpsc::channel;
 use std::sync::{Arc, Mutex};
 use std::time::Instant;
 
+pub struct SniffingManager {
+    is_sniffing_active: bool,
+    is_sniffing_paused: bool,
+}
+
+impl SniffingManager {
+    pub fn new() -> Self {
+        SniffingManager {
+            is_sniffing_paused: false,
+            is_sniffing_active: false,
+        }
+    }
+
+    pub fn start(&mut self) {
+        self.is_sniffing_active = true;
+        self.is_sniffing_paused = false;
+    }
+    pub fn pause(&mut self) {
+        self.is_sniffing_paused = true;
+    }
+    pub fn stop(&mut self) {
+        self.is_sniffing_paused = false;
+        self.is_sniffing_active = false;
+    }
+
+    pub fn resume(&mut self) {
+        self.is_sniffing_paused = false;
+    }
+
+    pub fn is_active(&self) -> bool {
+        return self.is_sniffing_active;
+    }
+
+    pub fn is_paused(&self) -> bool {
+        return self.is_sniffing_paused && self.is_sniffing_active;
+    }
+
+    pub fn can_start(&self) -> bool {
+        if self.is_active() == false && self.is_paused() == false {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    pub fn can_resume(&self) -> bool {
+        self.is_paused()
+    }
+
+    pub fn can_pause(&self) -> bool {
+        if self.is_active() {
+            if self.is_sniffing_paused == false {
+                return true;
+            }
+        }
+        return false;
+    }
+}
+
 pub fn configure_and_run() -> () {
     /*******************READING FROM CLI******************/
     let args = get_cli();
@@ -24,19 +83,18 @@ pub fn configure_and_run() -> () {
 
     /************ PARAMETERS TO PASS TO THREADS *************/
     let net_adapter_cp = args.net_adapter.clone();
-    let filter = args.filter;
     let output_file_name = args.output_file_name.clone();
     let timeout = args.timeout.clone();
-    //println!("VETTORE DI FILTRI {:?}", args.filters_list);
+    let filters_vec = args.filters_list;
+    let mut err ;
+    println!("{:?}", filters_vec);
     /********************************************************/
-
     /*** MUTEX WHERE PACKETS ARE PUSHED WHEN SNIFFED AND POPPED WHEN WROTE ON FILE ***/
     let report_vector = Arc::new(Mutex::new(Vec::new()));
     /*********************************************************************************/
 
     /**** FLAG USED TO CHECK WHETER THE SNIFFING PROCESS IS ACTIVE OR NOT ****/
-    let mut flag = false;
-    let mut paused = false;
+    let mut manager = SniffingManager::new();
     /*************************************************************************/
 
     /************* CREATING CHANNELS TO COMMUNICATE WITH THREADS *************/
@@ -55,15 +113,15 @@ pub fn configure_and_run() -> () {
         match string.as_str() {
             //start case
             "start" => {
-                time = Instant::now();
-                if flag == true && paused == false {
-                    println!("Sniffing yet!");
+                if manager.can_start() == false {
+                    println!("Can't start!");
                 } else {
+                    time = Instant::now();
                     /*starting sniffing and writing thread*/
                     tx_sniffer = sniffing_thread::sniff(
                         net_adapter_cp,
                         report_vector.clone(),
-                        filter.clone(),
+                        filters_vec.clone(),
                         /*&rx_sniffer,*/ rev_tx_sniffer.clone(),
                         time,
                         0,
@@ -80,43 +138,54 @@ pub fn configure_and_run() -> () {
                     notify = rev_rx_writer.recv().unwrap();
                     println!("{}", notify);
                     println!("Done!");
-                    flag = true;
-                    paused = false;
+                    manager.start();
                 }
             }
-            //stop case
+            //pause case
             "pause" => {
-                if flag == false && paused == false {
-                    println!("No active sniffing!");
+                if manager.can_pause() == false {
+                    println!("Can't pause!");
                 } else {
-                    tx_writer.send(String::from("pause")).unwrap();
-                    tx_sniffer.send(String::from("pause")).unwrap();
+                    err = tx_sniffer.send(String::from("pause"));
+                    match err {
+                        Ok(_) => {},
+                        Err(e) => {println!("{}", e);}
+                    }
+                    err = tx_writer.send(String::from("pause"));
+                    match err {
+                        Ok(_) => {},
+                        Err(e) => {println!("{}", e);}
+                    }
                     println!("Waiting for all the threads to stop...");
                     let mut notify = rev_rx_sniffer.recv().unwrap();
                     println!("{}", notify);
                     notify = rev_rx_writer.recv().unwrap();
                     println!("{}", notify);
                     println!("Done!");
-                    flag = false;
-                    paused = true;
+                    manager.pause();
                 }
                 pause_time = Instant::now();
             }
             //resume case
             "resume" => {
-                let resume_time =  time.elapsed().as_millis() - pause_time.elapsed().as_millis();
-                time = Instant::now();
-                if flag == true && paused == false {
-                    println!("Sniffing yet!");
+                if manager.can_resume() == false {
+                    println!("Can't resume!");
                 } else {
+                    println!(
+                        "ELAPSED: {}, PAUSED: {}",
+                        time.elapsed().as_millis(),
+                        pause_time.elapsed().as_millis()
+                    );
+                    let resume_time = time.elapsed().as_millis() - pause_time.elapsed().as_millis();
+                    time = Instant::now();
                     /*starting sniffing and writing thread*/
                     tx_sniffer = sniffing_thread::sniff(
                         net_adapter_cp,
                         report_vector.clone(),
-                        filter.clone(),
+                        filters_vec.clone(),
                         /*&rx_sniffer,*/ rev_tx_sniffer.clone(),
                         time,
-                        resume_time
+                        resume_time,
                     );
                     tx_writer = writing_thread::write_file(
                         output_file_name.clone(),
@@ -130,16 +199,23 @@ pub fn configure_and_run() -> () {
                     notify = rev_rx_writer.recv().unwrap();
                     println!("{}", notify);
                     println!("Done!");
-                    flag = true;
-                    paused = false;
+                    manager.resume();
                 }
             }
             //stop case
             "stop" => {
                 println!("Terminating program");
-                if flag == true {
-                    tx_sniffer.send(String::from("stop")).unwrap();
-                    tx_writer.send(String::from("stop")).unwrap();
+                if manager.is_active() == true && manager.is_paused() == false{
+                    err = tx_sniffer.send(String::from("stop"));
+                    match err {
+                        Ok(_) => {},
+                        Err(e) => {println!("{}", e);}
+                    }
+                    err = tx_writer.send(String::from("stop"));
+                    match err {
+                        Ok(_) => {},
+                        Err(e) => {println!("{}", e);}
+                    }
                     println!("Waiting for all the threads to stop...");
                     let mut notify = rev_rx_sniffer.recv().unwrap();
                     println!("{}", notify);
@@ -147,7 +223,7 @@ pub fn configure_and_run() -> () {
                     println!("{}", notify);
                 }
                 println!("Done!");
-                //flag = false;
+                manager.stop();
                 break;
             }
             _ => {
