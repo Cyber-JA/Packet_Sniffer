@@ -9,7 +9,7 @@ use crate::lib::cli::{get_cli, get_user_commands};
 use pktparse::ethernet::EtherType;
 use pktparse::ethernet::EtherType::ARP;
 use pktparse::ip::IPProtocol;
-use pktparse::ip::IPProtocol::{Other, ICMP, TCP, UDP};
+use pktparse::ip::IPProtocol::{ICMP, TCP, UDP};
 use std::sync::mpsc::channel;
 use std::sync::{Arc, Mutex};
 use std::time::Instant;
@@ -90,8 +90,7 @@ pub fn configure_and_run() -> () {
     let output_file_name = args.output_file_name.clone();
     let timeout = args.timeout.clone();
     let filters_vec = args.filters_list.clone();
-    let mut filters_struct = LayersVectors::new();
-    filters_struct = fill_filters_vec(filters_vec.clone());
+    let filters_struct = fill_filters_vec(filters_vec.clone());
     println!("{:?}", filters_struct.l4_vector);
     println!("{:?}", filters_struct.l3_vector);
     println!("{:?}", filters_struct.l7_vector);
@@ -263,10 +262,6 @@ impl LayersVectors {
             l4_vector: Vec::new(),
             l7_vector: Vec::new(),
         }
-    }
-
-    pub fn deserialize_filters(&mut self, filters: Vec<String>) {
-        println!("{:?}", filters);
     }
 }
 

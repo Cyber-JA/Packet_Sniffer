@@ -2,7 +2,6 @@ use clap::Parser;
 use pcap::Device;
 use std::io;
 use std::io::{stdout, BufRead, Write};
-use std::num::ParseIntError;
 use Option;
 
 //CLI developed using
@@ -28,7 +27,6 @@ pub struct Args {
     pub(crate) timeout: u16, //in ms
 
     /// specify filters to apply between quotes (e.g. TCP, reports TCP's packets only), do not specify parameters to see a list of available filters
-    /// Follows BPF syntax to specify protocols, otherwise no filter will be applied
     #[clap(short = 'f', long, default_value = "no")]
     pub(crate) filter: String,
 
@@ -55,7 +53,7 @@ pub fn read_input_string() -> String {
     user_input = user_input.trim().parse().unwrap();
     user_input
 }
-
+//#[allow(unused_assignments)]
 pub fn read_input_usize(len: usize) -> usize {
     let check;
     let mut my_int = 0;

@@ -6,7 +6,7 @@ use std::sync::mpsc::{channel, Sender, TryRecvError};
 use std::sync::{Arc, Mutex};
 use std::thread;
 use std::time::Instant;
-
+//#[allow(irrefutable_let_patterns)]
 pub fn sniff(
     net_adapter: usize,
     report_vector: Arc<Mutex<Vec<Report>>>,
