@@ -34,6 +34,7 @@ pub struct Args {
     pub(crate) filters_list: Vec<String>,
 }
 
+
 //function used to handle cli arguments and eventually choices by the user (e.g. select a device if not known one)
 pub fn get_cli() -> Args {
     let mut args = Args::parse(); //launching CLI
@@ -243,4 +244,5 @@ pub fn select_among_filters_with_provided_input(input_string: String) -> Vec<Str
     }
     list
 }
+
 

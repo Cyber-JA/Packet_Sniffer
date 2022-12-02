@@ -5,28 +5,12 @@ use std::sync::mpsc::{channel, Sender, TryRecvError};
 use std::sync::{Arc, Mutex};
 use std::thread;
 use std::time::Instant;
-use pktparse::ip::IPProtocol::TCP;
-
-pub struct LayersVectors {
-    l3_vector: Vec<String>,
-    l4_vector: Vec<String>,
-    l7_vector: Vec<String>
-}
-
-impl LayersVectors{
-    pub fn new()->Self{
-        LayersVectors{l3_vector: Vec::new(), l4_vector: Vec::new(), l7_vector: Vec::new()}
-    }
-
-    pub fn deserialize_filters(&mut self, filters: Vec<String>){
-        println!("{:?}", filters);
-    }
-}
+use crate::lib::LayersVectors;
 
 pub fn sniff(
     net_adapter: usize,
     report_vector: Arc<Mutex<Vec<Report>>>,
-    filter: Vec<String>,
+    filter: LayersVectors,
     /*rx_sniffer: &Receiver<String>,*/ rev_tx_sniffer: Sender<String>,
     time: Instant,
     start_time: u128,
@@ -42,7 +26,7 @@ pub fn sniff(
                 .promisc(true)
                 .open()
                 .unwrap();
-            println!("{:?}", filter);
+
             /*if !filter.as_str().is_empty() {
                 match cap.filter(filter.as_str(), false) {
                     Err(e) => {
@@ -71,7 +55,7 @@ pub fn sniff(
 
                 println!("parsing");
                 let report = parse(packet, time, start_time).clone();
-                //if report.l4_protocol != TCP {continue}
+                if filtering(filter.clone(), report.clone()) == false {continue}
                 println!("parsing done!");
                 let report_vector_copy = report_vector.clone();
                 println!("put into report");
@@ -132,4 +116,11 @@ pub fn insert_into_report(report_vector: &Arc<Mutex<Vec<Report>>>, packet: Repor
         vec.push(report_to_insert);
         println!("OKKKK");
     }
+}
+
+pub fn filtering(filters_struct: LayersVectors, packet: ReportPacket)->bool{
+    if filters_struct.l3_vector.contains(&packet.l3_protocol) {return true}
+    if filters_struct.l4_vector.contains(&packet.l4_protocol) {return true}
+    //if filters_struct.l7_vector.contains(&packet.l3_protocol) {return true}
+    false
 }

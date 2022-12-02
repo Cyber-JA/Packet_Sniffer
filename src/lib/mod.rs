@@ -9,6 +9,10 @@ use crate::lib::cli::{get_cli, get_user_commands};
 use std::sync::mpsc::channel;
 use std::sync::{Arc, Mutex};
 use std::time::Instant;
+use pktparse::ethernet::EtherType;
+use pktparse::ethernet::EtherType::ARP;
+use pktparse::ip::IPProtocol;
+use pktparse::ip::IPProtocol::{ICMP, Other, TCP, UDP};
 
 pub struct SniffingManager {
     is_sniffing_active: bool,
@@ -85,9 +89,13 @@ pub fn configure_and_run() -> () {
     let net_adapter_cp = args.net_adapter.clone();
     let output_file_name = args.output_file_name.clone();
     let timeout = args.timeout.clone();
-    let filters_vec = args.filters_list;
+    let filters_vec = args.filters_list.clone();
+    let mut filters_struct = LayersVectors::new();
+    filters_struct = fill_filters_vec(filters_vec.clone());
+    println!("{:?}", filters_struct.l4_vector);
+    println!("{:?}", filters_struct.l3_vector);
+    println!("{:?}", filters_struct.l7_vector);
     let mut err ;
-    println!("{:?}", filters_vec);
     /********************************************************/
     /*** MUTEX WHERE PACKETS ARE PUSHED WHEN SNIFFED AND POPPED WHEN WROTE ON FILE ***/
     let report_vector = Arc::new(Mutex::new(Vec::new()));
@@ -121,7 +129,7 @@ pub fn configure_and_run() -> () {
                     tx_sniffer = sniffing_thread::sniff(
                         net_adapter_cp,
                         report_vector.clone(),
-                        filters_vec.clone(),
+                        filters_struct.clone(),
                         /*&rx_sniffer,*/ rev_tx_sniffer.clone(),
                         time,
                         0,
@@ -182,7 +190,7 @@ pub fn configure_and_run() -> () {
                     tx_sniffer = sniffing_thread::sniff(
                         net_adapter_cp,
                         report_vector.clone(),
-                        filters_vec.clone(),
+                        filters_struct.clone(),
                         /*&rx_sniffer,*/ rev_tx_sniffer.clone(),
                         time,
                         resume_time,
@@ -231,4 +239,43 @@ pub fn configure_and_run() -> () {
             }
         }
     }
+}
+
+#[derive(Clone)]
+pub struct LayersVectors {
+    l3_vector: Vec<EtherType>,
+    l4_vector: Vec<IPProtocol>,
+    l7_vector: Vec<IPProtocol>
+}
+
+impl LayersVectors{
+    pub fn new()->Self{
+        LayersVectors{l3_vector: Vec::new(), l4_vector: Vec::new(), l7_vector: Vec::new()}
+    }
+
+    pub fn deserialize_filters(&mut self, filters: Vec<String>){
+        println!("{:?}", filters);
+    }
+}
+
+pub fn fill_filters_vec(list: Vec<String>)->LayersVectors{
+    let mut vex_to_ret = LayersVectors::new();
+    for val in list.iter(){
+        match val.as_str() {
+            "tcp" => {vex_to_ret.l4_vector.push(
+                TCP
+            );},
+            "udp" => {vex_to_ret.l4_vector.push(
+                UDP
+            );},
+            "arp" => {vex_to_ret.l3_vector.push(
+                ARP
+            );},
+            "icmp" => {vex_to_ret.l4_vector.push(
+                ICMP
+            );}
+            &_ => {}
+        }
+    }
+    vex_to_ret
 }
