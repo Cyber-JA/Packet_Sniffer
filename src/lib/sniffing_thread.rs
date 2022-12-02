@@ -1,11 +1,11 @@
 use crate::lib::parsing::parse;
 use crate::lib::report_packet::{Report, ReportPacket};
+use crate::lib::LayersVectors;
 use pcap::Device;
 use std::sync::mpsc::{channel, Sender, TryRecvError};
 use std::sync::{Arc, Mutex};
 use std::thread;
 use std::time::Instant;
-use crate::lib::LayersVectors;
 
 pub fn sniff(
     net_adapter: usize,
@@ -41,7 +41,8 @@ pub fn sniff(
             while let handle = rx_sniffer.try_recv() {
                 //println!("reader: {:?}", handle);
                 match handle {
-                    Ok(_) => { println!("sniffer {:?}", handle);
+                    Ok(_) => {
+                        println!("sniffer {:?}", handle);
                         break;
                     }
                     Err(error) => {
@@ -55,7 +56,9 @@ pub fn sniff(
 
                 println!("parsing");
                 let report = parse(packet, time, start_time).clone();
-                if filtering(filter.clone(), report.clone()) == false {continue}
+                if filtering(filter.clone(), report.clone()) == false {
+                    continue;
+                }
                 println!("parsing done!");
                 let report_vector_copy = report_vector.clone();
                 println!("put into report");
@@ -118,10 +121,19 @@ pub fn insert_into_report(report_vector: &Arc<Mutex<Vec<Report>>>, packet: Repor
     }
 }
 
-pub fn filtering(filters_struct: LayersVectors, packet: ReportPacket)->bool {
-    if filters_struct.l3_vector.is_empty() && filters_struct.l4_vector.is_empty() && filters_struct.l7_vector.is_empty() { return true }
-    if filters_struct.l3_vector.contains(&packet.l3_protocol) { return true }
-    if filters_struct.l4_vector.contains(&packet.l4_protocol) { return true }
+pub fn filtering(filters_struct: LayersVectors, packet: ReportPacket) -> bool {
+    if filters_struct.l3_vector.is_empty()
+        && filters_struct.l4_vector.is_empty()
+        && filters_struct.l7_vector.is_empty()
+    {
+        return true;
+    }
+    if filters_struct.l3_vector.contains(&packet.l3_protocol) {
+        return true;
+    }
+    if filters_struct.l4_vector.contains(&packet.l4_protocol) {
+        return true;
+    }
     //if filters_struct.l7_vector.contains(&packet.l3_protocol) {return true}
     false
 }

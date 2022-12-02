@@ -2,8 +2,8 @@ use clap::Parser;
 use pcap::Device;
 use std::io;
 use std::io::{stdout, BufRead, Write};
-use Option;
 use std::num::ParseIntError;
+use Option;
 
 //CLI developed using
 /// time to sniff
@@ -34,7 +34,6 @@ pub struct Args {
 
     pub(crate) filters_list: Vec<String>,
 }
-
 
 //function used to handle cli arguments and eventually choices by the user (e.g. select a device if not known one)
 pub fn get_cli() -> Args {
@@ -68,8 +67,13 @@ pub fn read_input_usize(len: usize) -> usize {
     io::stdin().lock().read_line(&mut user_input).unwrap();
     check = user_input.trim().parse::<usize>();
     match check {
-        Ok(val) => { my_int = val; }
-        Err(_) => { println!("Invalid input!"); my_int = read_input_usize(len.clone());}
+        Ok(val) => {
+            my_int = val;
+        }
+        Err(_) => {
+            println!("Invalid input!");
+            my_int = read_input_usize(len.clone());
+        }
     }
     if my_int < 1 || my_int > len {
         println!("Error! Insert a valid number:");
@@ -191,7 +195,7 @@ pub fn are_filters_acceptable(filter: String) -> bool {
                 break;
             };
         }
-        if flag == false && filter.ne("no"){
+        if flag == false && filter.ne("no") {
             println!("Filter <{}> is not available yet! But soon it will...", f);
             break;
         };
@@ -260,5 +264,3 @@ pub fn select_among_filters_with_provided_input(input_string: String) -> Vec<Str
     }
     list
 }
-
-

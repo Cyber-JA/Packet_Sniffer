@@ -31,7 +31,8 @@ pub fn write_file(
                 let handle = rx_writer.try_recv();
                 //println!("writer: {:?}", handle);
                 match handle {
-                    Ok(_) => { println!("writer {:?}", handle);
+                    Ok(_) => {
+                        println!("writer {:?}", handle);
                         break;
                     }
                     Err(error) => {

@@ -6,13 +6,13 @@ pub mod sniffing_thread;
 pub mod writing_thread;
 
 use crate::lib::cli::{get_cli, get_user_commands};
-use std::sync::mpsc::channel;
-use std::sync::{Arc, Mutex};
-use std::time::Instant;
 use pktparse::ethernet::EtherType;
 use pktparse::ethernet::EtherType::ARP;
 use pktparse::ip::IPProtocol;
-use pktparse::ip::IPProtocol::{ICMP, Other, TCP, UDP};
+use pktparse::ip::IPProtocol::{Other, ICMP, TCP, UDP};
+use std::sync::mpsc::channel;
+use std::sync::{Arc, Mutex};
+use std::time::Instant;
 
 pub struct SniffingManager {
     is_sniffing_active: bool,
@@ -95,7 +95,7 @@ pub fn configure_and_run() -> () {
     println!("{:?}", filters_struct.l4_vector);
     println!("{:?}", filters_struct.l3_vector);
     println!("{:?}", filters_struct.l7_vector);
-    let mut err ;
+    let mut err;
     /********************************************************/
     /*** MUTEX WHERE PACKETS ARE PUSHED WHEN SNIFFED AND POPPED WHEN WROTE ON FILE ***/
     let report_vector = Arc::new(Mutex::new(Vec::new()));
@@ -156,13 +156,17 @@ pub fn configure_and_run() -> () {
                 } else {
                     err = tx_sniffer.send(String::from("pause"));
                     match err {
-                        Ok(_) => {},
-                        Err(e) => {println!("{}", e);}
+                        Ok(_) => {}
+                        Err(e) => {
+                            println!("{}", e);
+                        }
                     }
                     err = tx_writer.send(String::from("pause"));
                     match err {
-                        Ok(_) => {},
-                        Err(e) => {println!("{}", e);}
+                        Ok(_) => {}
+                        Err(e) => {
+                            println!("{}", e);
+                        }
                     }
                     println!("Waiting for all the threads to stop...");
                     let mut notify = rev_rx_sniffer.recv().unwrap();
@@ -213,16 +217,20 @@ pub fn configure_and_run() -> () {
             //stop case
             "stop" => {
                 println!("Terminating program");
-                if manager.is_active() == true && manager.is_paused() == false{
+                if manager.is_active() == true && manager.is_paused() == false {
                     err = tx_sniffer.send(String::from("stop"));
                     match err {
-                        Ok(_) => {},
-                        Err(e) => {println!("{}", e);}
+                        Ok(_) => {}
+                        Err(e) => {
+                            println!("{}", e);
+                        }
                     }
                     err = tx_writer.send(String::from("stop"));
                     match err {
-                        Ok(_) => {},
-                        Err(e) => {println!("{}", e);}
+                        Ok(_) => {}
+                        Err(e) => {
+                            println!("{}", e);
+                        }
                     }
                     println!("Waiting for all the threads to stop...");
                     let mut notify = rev_rx_sniffer.recv().unwrap();
@@ -245,35 +253,39 @@ pub fn configure_and_run() -> () {
 pub struct LayersVectors {
     l3_vector: Vec<EtherType>,
     l4_vector: Vec<IPProtocol>,
-    l7_vector: Vec<IPProtocol>
+    l7_vector: Vec<IPProtocol>,
 }
 
-impl LayersVectors{
-    pub fn new()->Self{
-        LayersVectors{l3_vector: Vec::new(), l4_vector: Vec::new(), l7_vector: Vec::new()}
+impl LayersVectors {
+    pub fn new() -> Self {
+        LayersVectors {
+            l3_vector: Vec::new(),
+            l4_vector: Vec::new(),
+            l7_vector: Vec::new(),
+        }
     }
 
-    pub fn deserialize_filters(&mut self, filters: Vec<String>){
+    pub fn deserialize_filters(&mut self, filters: Vec<String>) {
         println!("{:?}", filters);
     }
 }
 
-pub fn fill_filters_vec(list: Vec<String>)->LayersVectors{
+pub fn fill_filters_vec(list: Vec<String>) -> LayersVectors {
     let mut vex_to_ret = LayersVectors::new();
-    for val in list.iter(){
+    for val in list.iter() {
         match val.as_str() {
-            "tcp" => {vex_to_ret.l4_vector.push(
-                TCP
-            );},
-            "udp" => {vex_to_ret.l4_vector.push(
-                UDP
-            );},
-            "arp" => {vex_to_ret.l3_vector.push(
-                ARP
-            );},
-            "icmp" => {vex_to_ret.l4_vector.push(
-                ICMP
-            );}
+            "tcp" => {
+                vex_to_ret.l4_vector.push(TCP);
+            }
+            "udp" => {
+                vex_to_ret.l4_vector.push(UDP);
+            }
+            "arp" => {
+                vex_to_ret.l3_vector.push(ARP);
+            }
+            "icmp" => {
+                vex_to_ret.l4_vector.push(ICMP);
+            }
             &_ => {}
         }
     }
