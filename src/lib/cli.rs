@@ -112,6 +112,15 @@ pub fn select_device(net_adapter: usize) -> usize {
         while my_int <= 0 || my_int > list.len() - 1 {
             my_int = read_input_usize(list.len());
         }
+    } else {
+        my_int = net_adapter;
+        if my_int <= 0 || my_int > list.len() - 1 {
+            println!("Error! Insert a valid number:");
+            stdout().flush().unwrap();
+        }
+        while my_int <= 0 || my_int > list.len() - 1 {
+            my_int = read_input_usize(list.len());
+        }
     }
     return my_int;
     /*******************************************************************************/
@@ -175,7 +184,7 @@ pub fn are_filters_acceptable(filter: String) -> bool {
                 break;
             };
         }
-        if flag == false {
+        if flag == false && filter.ne("no"){
             println!("Filter <{}> is not available yet! But soon it will...", f);
             break;
         };
