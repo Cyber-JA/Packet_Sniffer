@@ -118,9 +118,10 @@ pub fn insert_into_report(report_vector: &Arc<Mutex<Vec<Report>>>, packet: Repor
     }
 }
 
-pub fn filtering(filters_struct: LayersVectors, packet: ReportPacket)->bool{
-    if filters_struct.l3_vector.contains(&packet.l3_protocol) {return true}
-    if filters_struct.l4_vector.contains(&packet.l4_protocol) {return true}
+pub fn filtering(filters_struct: LayersVectors, packet: ReportPacket)->bool {
+    if filters_struct.l3_vector.is_empty() && filters_struct.l4_vector.is_empty() && filters_struct.l7_vector.is_empty() { return true }
+    if filters_struct.l3_vector.contains(&packet.l3_protocol) { return true }
+    if filters_struct.l4_vector.contains(&packet.l4_protocol) { return true }
     //if filters_struct.l7_vector.contains(&packet.l3_protocol) {return true}
     false
 }
