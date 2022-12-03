@@ -37,7 +37,7 @@ pub struct Args {
 pub fn get_cli() -> Args {
     let mut args = Args::parse(); //launching CLI
     let n = args.net_adapter.clone();
-    let f = args.filter.clone();
+    let f = trim_whitespaces(comma_to_space(args.filter.clone().as_str()).as_str());
     args.net_adapter = select_device(n);
     args.filters_list = select_filters(f);
     args //struct returned with filled value
@@ -50,6 +50,8 @@ pub fn read_input_string() -> String {
     stdout().flush().unwrap();
     let mut user_input = String::new();
     io::stdin().lock().read_line(&mut user_input).unwrap();
+    println!(">>>");
+    stdout().flush().unwrap();
     user_input = user_input.trim().parse().unwrap();
     user_input
 }
@@ -63,6 +65,8 @@ pub fn read_input_usize(len: usize) -> usize {
     stdout().flush().unwrap();
     let mut user_input = String::new();
     io::stdin().lock().read_line(&mut user_input).unwrap();
+    println!(">>>");
+    stdout().flush().unwrap();
     check = user_input.trim().parse::<usize>();
     match check {
         Ok(val) => {
@@ -144,24 +148,17 @@ pub fn show_filters_available() {
     println!("> arp");
 }
 
-/*pub fn select_filters(filter: String) -> String {
-    let mut string_to_ret = String::new();
-    match filter.as_str() {
-        "list" => {
-            show_filters_available();
-            string_to_ret = read_input_string();
-        }
-        "no" => {
-            println!("No filters applied, all the packets will be shown...");
-            stdout().flush().unwrap();
-        }
-        _ => {
-            string_to_ret = filter.clone();
-        }
-    }
-    return string_to_ret;
+pub fn trim_whitespaces(s: &str) -> String {
+    let words: Vec<_> = s.split_whitespace().collect();
+    words.join(" ")
 }
-*/
+
+pub fn comma_to_space(s: &str) -> String {
+    // first attempt: allocates a vector and a string
+    let words: Vec<_> = s.split(",").collect();
+    words.join(" ")
+}
+
 pub fn select_filters(filter: String) -> Vec<String> {
     let mut vec_to_ret = Vec::new();
     match filter.as_str() {
