@@ -48,7 +48,7 @@ Options:
   Usage: cargo run -- -h, cargo run -- --help
 ```
 
-### Supported Filters
+## Supported Filters
 This section list the supported filters.
 Note that those filters are not mutually exclusive (e.g. -f "tcp arp" will sniff *TCP* and *ARP* packets
 Following filters are the ones supported, more can and will be added:
@@ -58,16 +58,16 @@ To get the list of supported filters `-f list`
 - `ARP`
 - `ICMP`
 
-### Timeout
+## Timeout
 This sniffer gives the chance to setup a timeout. When the timeout expires, a report is generated the first time (e.g. file specified in the `-o file_name` option, if not existing, otherwise the old one is overwritten) and the timeout is restarted. Then, when expires, report is updated. And so on.
 N.B. If this option is not used, a default one is set (2000 ms).
 
-### Network Adapters
+## Network Adapters
 It is possible to specify the network adapter to be used during the sniffing. 
 Do not specify this option to get a list of the available ones, giving chance to choose.
 Not all the network adapters are active on the machine, hence pay attention to the selected one (usually the one with an IPv4 classic address).
 
-### Available Commands
+## Available Commands
 Commands available to control the sniffing process:
 - `start`: when the configuration is finished, the sniffing process can start.
 - `pause`: to temporarily pause the sniffing process (can resume later)
