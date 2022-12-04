@@ -73,7 +73,7 @@ pub fn read_input_usize(len: usize) -> usize {
             my_int = val;
         }
         Err(_) => {
-            println!("Invalid input!");
+            println!("Error: Invalid input!");
             my_int = read_input_usize(len.clone());
         }
     }
@@ -98,7 +98,7 @@ pub fn get_user_commands() -> String {
         "resume" => {}
         "stop" => {}
         _ => {
-            println!("Invalid command...");
+            println!("Error: Invalid command...");
             stdout().flush().unwrap();
         }
     }
@@ -191,7 +191,7 @@ pub fn are_filters_acceptable(filter: String) -> bool {
             };
         }
         if flag == false && filter.ne("no") {
-            println!("Filter <{}> is not available yet! But soon it will...", f);
+            println!("Error: Filter <{}> is not available", f);
             break;
         };
     }
@@ -214,7 +214,7 @@ pub fn select_among_filters() -> Vec<String> {
         let input_string = read_input_string();
         match input_string.as_str() {
             "" => {
-                println!("No filters applied, all the packets will be shown...");
+                println!("No filters applied...");
                 stdout().flush().unwrap();
                 break;
             }
@@ -235,7 +235,7 @@ pub fn select_among_filters_with_provided_input(input_string: String) -> Vec<Str
     loop {
         match input_string.as_str() {
             "" => {
-                println!("No filters applied, all the packets will be shown...");
+                println!("No filters applied");
                 stdout().flush().unwrap();
                 break;
             }

@@ -118,13 +118,13 @@ pub fn configure_and_run() -> () {
     loop {
         //Acquire command from the user
         if manager.is_sniffing_active == true { println!("The sniffing session is in progress..."); stdout().flush().unwrap();}
-        if manager.is_sniffing_paused == true { println!("The sniffing session is in paused..."); stdout().flush().unwrap();}
+        if manager.is_sniffing_paused == true { println!("The sniffing session is paused..."); stdout().flush().unwrap();}
         let string = get_user_commands();
         match string.as_str() {
             //start case
             "start" => {
                 if manager.can_start() == false {
-                    println!("Can't start!");
+                    println!("Error: A sniffing session is still in progress!");
                 } else {
                     time = Instant::now();
                     /*starting sniffing and writing thread*/
@@ -154,7 +154,7 @@ pub fn configure_and_run() -> () {
             //pause case
             "pause" => {
                 if manager.can_pause() == false {
-                    println!("Can't pause!");
+                    println!("Error: Can't pause, no sniffing session in progress!");
                 } else {
                     err = tx_sniffer.send(String::from("pause"));
                     match err {
@@ -170,7 +170,7 @@ pub fn configure_and_run() -> () {
                             println!("{}", e);
                         }
                     }
-                    println!("Waiting for all the threads to stop...");
+                    println!("Waiting for all the threads to pause...");
                     let mut notify = rev_rx_sniffer.recv().unwrap();
                     println!("{}", notify);
                     notify = rev_rx_writer.recv().unwrap();
@@ -183,7 +183,7 @@ pub fn configure_and_run() -> () {
             //resume case
             "resume" => {
                 if manager.can_resume() == false {
-                    println!("Can't resume!");
+                    println!("Error: Can't resume, no sniffing session to resume!");
                 } else {
                     println!(
                         "ELAPSED: {}, PAUSED: {}",
