@@ -73,3 +73,16 @@ Commands available to control the sniffing process:
 - `pause`: to temporarily pause the sniffing process (can resume later)
 - `resume`: resume the sniffing process from a paused session.
 - `stop`: kill the sniffing process, shutting down the application
+
+## Errors
+Using the tool, it is possible that some misbehaviour leads to errors, going in the opposite of the intended usage.
+The one following is a list of the errors shown to the user, their context and their explanation:
+- Adapter selection
+  - If a number maps to a Device not included in the list supported by the tool then this error is shown to the user: `Error! Insert a valid number`. Then it is give the chance to prompt again. *valid values: 1-6*
+  - If user's input is not a number then the Error `Error: Invalid input!` is shown to the user.
+- Filter selection
+  - In the filter selection, only supported filters can be specified, otherwise all the packets will be sniffed. `Error: Filter <FILTER_NAME> is not available`
+- After configuration
+  - After the configuration, the commands `start, pause, stop, resume` are possible. If other commands are specified, then the Error `Error: Invalid command...` is shown to the user
+  - If there is no sniffing session started (even if paused) and the user try to pause or resume it, then respectively `Error: Can't pause, no sniffing session in progress!` `Error: Can't resume, no sniffing session to resume!` are shown. Then it is given the chance to prompt again a command.
+  - If there is no sniffing session paused but started and the user try to start it, then `Error: A sniffing session is still in progress!` is shown. Then it is given the chance to prompt again a command.
