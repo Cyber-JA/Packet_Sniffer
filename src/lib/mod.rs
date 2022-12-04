@@ -5,6 +5,7 @@ pub mod report_packet;
 pub mod sniffing_thread;
 pub mod writing_thread;
 
+use std::io::{stdout, Write};
 use crate::lib::cli::{get_cli, get_user_commands};
 use pktparse::ethernet::EtherType;
 use pktparse::ethernet::EtherType::ARP;
@@ -116,6 +117,8 @@ pub fn configure_and_run() -> () {
     let mut pause_time = Instant::now();
     loop {
         //Acquire command from the user
+        if manager.is_sniffing_active == true { println!("The sniffing session is in progress..."); stdout().flush().unwrap();}
+        if manager.is_sniffing_paused == true { println!("The sniffing session is in paused..."); stdout().flush().unwrap();}
         let string = get_user_commands();
         match string.as_str() {
             //start case
