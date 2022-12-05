@@ -146,6 +146,9 @@ pub fn show_filters_available() {
     println!("> tcp");
     println!("> icmp");
     println!("> arp");
+    println!("> dns");
+    println!("> tls");
+    println!("> dhcp");
 }
 
 pub fn trim_whitespaces(s: &str) -> String {
@@ -181,6 +184,9 @@ pub fn are_filters_acceptable(filter: String) -> bool {
     list.push(String::from("udp"));
     list.push(String::from("icmp"));
     list.push(String::from("arp"));
+    list.push(String::from("dns"));
+    list.push(String::from("tls"));
+    list.push(String::from("dhcp"));
     let mut flag = false;
     for f in filter.as_str().trim().split(" ") {
         flag = false;

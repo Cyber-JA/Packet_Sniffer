@@ -22,14 +22,15 @@ pub fn sniff(
         .spawn(move || {
             let list = Device::list().unwrap();
             let mut cap = pcap::Capture::from_device(list[net_adapter - 1].clone())
-                .unwrap()
-                .promisc(true)
-                .open()
-                .unwrap();
-
+            .unwrap()
+            .promisc(true)
+            .timeout(5000)
+            .open()
+            .unwrap();
 
             rev_tx_sniffer.send(String::from("sniffer ready!")).unwrap();
-            while let handle = rx_sniffer.try_recv() {
+            loop{
+                let handle = rx_sniffer.try_recv();
                 //println!("reader: {:?}", handle);
                 match handle {
                     Ok(_) => {
@@ -42,7 +43,7 @@ pub fn sniff(
                         }
                     }
                 };
-                if let Ok(packet) = cap.next_packet() {
+                if let Ok(packet) = cap.next_packet(){
                     let report = parse(packet, time, start_time).clone();
                     if filtering(filter.clone(), report.clone()) == false {
                         continue;
@@ -56,9 +57,9 @@ pub fn sniff(
                         .unwrap();
                 }
             }
-                rev_tx_sniffer
-                    .send(String::from("Stopping sniffer thread"))
-                    .unwrap();
+            rev_tx_sniffer
+                .send(String::from("Stopping sniffer thread"))
+                .unwrap();
         })
         .unwrap();
     /******************************************************/
@@ -89,11 +90,13 @@ pub fn insert_into_report(report_vector: &Arc<Mutex<Vec<Report>>>, packet: Repor
     if !found {
         let l3_protocol = packet.l3_protocol;
         let l4_protocol = packet.l4_protocol;
+        let l7_protocol = packet.l7_protocol;
         let report_to_insert = Report::new(
             l3_protocol,
             packet.source_ip,
             packet.dest_ip,
             l4_protocol,
+            l7_protocol,
             packet.source_port,
             packet.dest_port,
             packet.bytes_exchanged,
@@ -117,6 +120,8 @@ pub fn filtering(filters_struct: LayersVectors, packet: ReportPacket) -> bool {
     if filters_struct.l4_vector.contains(&packet.l4_protocol) {
         return true;
     }
-    //if filters_struct.l7_vector.contains(&packet.l3_protocol) {return true}
+    if filters_struct.l7_vector.contains(&packet.l7_protocol) {
+        return true
+    }
     false
 }

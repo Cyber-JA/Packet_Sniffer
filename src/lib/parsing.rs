@@ -20,6 +20,7 @@ fn parse_ether(packet: Packet, time: Instant, start_time: u128) -> ReportPacket 
         Address::IPv4Addr(Ipv4Addr::new(0, 0, 0, 0)),
         Address::IPv4Addr(Ipv4Addr::new(0, 0, 0, 0)),
         IPProtocol::Other(0),
+        "".to_string(),
         0,
         0,
         0,
@@ -118,22 +119,37 @@ fn parse_arp(payload: &[u8], mut report: ReportPacket) -> ReportPacket {
 
 //TCP PARSING, TO COMPLETE
 fn parse_tcp(payload: &[u8], mut report: ReportPacket) -> ReportPacket {
-    if let Ok((_p, header)) = pktparse::tcp::parse_tcp_header(payload) {
+    if let Ok((p, header)) = pktparse::tcp::parse_tcp_header(payload) {
         report.source_port = header.source_port;
         report.dest_port = header.dest_port;
         report.l4_protocol = TCP;
+        if let Ok(_dns) = dns_parser::Packet::parse(p){
+            report.l7_protocol = "DNS".to_string();
+        }
+        else if let Ok(_tls) = tls_parser::parse_tls_encrypted(p){
+            report.l7_protocol = "TLS".to_string();
+        }
+        else if let Ok(_dhcp4) = dhcp4r::packet::Packet::from(p){
+            report.l7_protocol = "DHCP".to_string();
+        }
     }
     report
 }
 
 //UDP PARSING, TO COMPLETE
 fn parse_udp(payload: &[u8], mut report: ReportPacket) -> ReportPacket {
-    if let Ok((_udp_datagram, header)) = pktparse::udp::parse_udp_header(payload) {
+    if let Ok((udp_datagram, header)) = pktparse::udp::parse_udp_header(payload) {
         report.source_port = header.source_port;
         report.dest_port = header.dest_port;
         report.l4_protocol = UDP;
-    }
+        if let Ok(_dns) = dns_parser::Packet::parse(udp_datagram){
+            report.l7_protocol = "DNS".to_string();
+        }
+        else if let Ok(_dhcp4) = dhcp4r::packet::Packet::from(udp_datagram){
+            report.l7_protocol = "DHCP".to_string();
+        }
 
+    }
     report
 }
 

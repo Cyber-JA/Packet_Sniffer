@@ -255,7 +255,7 @@ pub fn configure_and_run() -> () {
 pub struct LayersVectors {
     l3_vector: Vec<EtherType>,
     l4_vector: Vec<IPProtocol>,
-    l7_vector: Vec<IPProtocol>,
+    l7_vector: Vec<String>,
 }
 
 impl LayersVectors {
@@ -283,6 +283,15 @@ pub fn fill_filters_vec(list: Vec<String>) -> LayersVectors {
             }
             "icmp" => {
                 vex_to_ret.l4_vector.push(ICMP);
+            }
+            "dns" => {
+                vex_to_ret.l7_vector.push("DNS".to_string());
+            }
+            "tls" => {
+                vex_to_ret.l7_vector.push("TLS".to_string());
+            }
+            "dhcp" => {
+                vex_to_ret.l7_vector.push("DHCP".to_string());
             }
             &_ => {}
         }
