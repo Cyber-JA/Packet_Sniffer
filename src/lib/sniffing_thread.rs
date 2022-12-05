@@ -42,22 +42,23 @@ pub fn sniff(
                         }
                     }
                 };
-                let packet = cap.next_packet().unwrap();
-                let report = parse(packet, time, start_time).clone();
-                if filtering(filter.clone(), report.clone()) == false {
-                    continue;
+                if let Ok(packet) = cap.next_packet() {
+                    let report = parse(packet, time, start_time).clone();
+                    if filtering(filter.clone(), report.clone()) == false {
+                        continue;
+                    }
+                    let report_vector_copy = report_vector.clone();
+                    thread::Builder::new()
+                        .name("reporter".into())
+                        .spawn(move || {
+                            insert_into_report(&report_vector_copy, report);
+                        })
+                        .unwrap();
                 }
-                let report_vector_copy = report_vector.clone();
-                thread::Builder::new()
-                    .name("reporter".into())
-                    .spawn(move || {
-                        insert_into_report(&report_vector_copy, report);
-                    })
-                    .unwrap();
             }
-            rev_tx_sniffer
-                .send(String::from("Stopping sniffer thread"))
-                .unwrap();
+                rev_tx_sniffer
+                    .send(String::from("Stopping sniffer thread"))
+                    .unwrap();
         })
         .unwrap();
     /******************************************************/
