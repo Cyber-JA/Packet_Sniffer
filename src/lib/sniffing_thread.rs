@@ -38,7 +38,7 @@ pub fn sniff(
                     }
                     Err(error) => {
                         if error != TryRecvError::Empty && error != TryRecvError::Disconnected {
-                            println!("Unexpected error in sniffer thread...{}", error);
+                            panic!("Unexpected error in sniffer thread...{}. Panicking;", error);
                         }
                     }
                 };

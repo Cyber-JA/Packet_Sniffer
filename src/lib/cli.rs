@@ -55,7 +55,7 @@ pub fn read_input_string() -> String {
     user_input = user_input.trim().parse().unwrap();
     user_input
 }
-//#[allow(unused_assignments)]
+#[allow(unused_assignments)]
 pub fn read_input_usize(len: usize) -> usize {
     let check;
     let mut my_int = 0;
