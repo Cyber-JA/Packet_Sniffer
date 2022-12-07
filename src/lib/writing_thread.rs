@@ -53,10 +53,13 @@ pub fn write_file(
 }
 
 pub fn write_report(report_vector: &Arc<Mutex<Vec<Report>>>, timeout: u64, file: &mut File) -> () {
-    file.rewind().expect("Unexpected error! Press stop to end the program.");;
+    file.rewind()
+        .expect("Unexpected error! Press stop to end the program.");
     thread::sleep(Duration::from_millis(timeout));
     //println!("----------------------------------------------------------------------------------");
-    let vec = report_vector.lock().expect("Unexpected error! Press stop to end the program.");
+    let vec = report_vector
+        .lock()
+        .expect("Unexpected error! Press stop to end the program.");
     vec.iter().for_each(|p| fmt_for_file(p, file));
     //println!("wrote file");
 }

@@ -123,13 +123,11 @@ fn parse_tcp(payload: &[u8], mut report: ReportPacket) -> ReportPacket {
         report.source_port = header.source_port;
         report.dest_port = header.dest_port;
         report.l4_protocol = TCP;
-        if let Ok(_dns) = dns_parser::Packet::parse(p){
+        if let Ok(_dns) = dns_parser::Packet::parse(p) {
             report.l7_protocol = "DNS".to_string();
-        }
-        else if let Ok(_tls) = tls_parser::parse_tls_encrypted(p){
+        } else if let Ok(_tls) = tls_parser::parse_tls_encrypted(p) {
             report.l7_protocol = "TLS".to_string();
-        }
-        else if let Ok(_dhcp4) = dhcp4r::packet::Packet::from(p){
+        } else if let Ok(_dhcp4) = dhcp4r::packet::Packet::from(p) {
             report.l7_protocol = "DHCP".to_string();
         }
     }
@@ -142,13 +140,11 @@ fn parse_udp(payload: &[u8], mut report: ReportPacket) -> ReportPacket {
         report.source_port = header.source_port;
         report.dest_port = header.dest_port;
         report.l4_protocol = UDP;
-        if let Ok(_dns) = dns_parser::Packet::parse(udp_datagram){
+        if let Ok(_dns) = dns_parser::Packet::parse(udp_datagram) {
             report.l7_protocol = "DNS".to_string();
-        }
-        else if let Ok(_dhcp4) = dhcp4r::packet::Packet::from(udp_datagram){
+        } else if let Ok(_dhcp4) = dhcp4r::packet::Packet::from(udp_datagram) {
             report.l7_protocol = "DHCP".to_string();
         }
-
     }
     report
 }

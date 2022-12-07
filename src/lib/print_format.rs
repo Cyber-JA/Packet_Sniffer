@@ -42,13 +42,12 @@ pub fn fmt_for_file(packet: &Report, file: &mut File) {
             packet.timestamp_first,
             packet.timestamp_last
         );
-    } else if packet.l7_protocol != "".to_string(){
+    } else if packet.l7_protocol != "".to_string() {
         string = format!(
             "{:?} -> {:?} | {:?} ({:?} -> {:?}) | {} | bytes : {} | first_exchange : {:.3} | last_exchange : {:.3}\n\n",
             packet.source_ip, packet.dest_ip, packet.l4_protocol, packet.source_port, packet.dest_port, packet.l7_protocol, packet.bytes_exchanged, packet.timestamp_first, packet.timestamp_last
         )
-    }
-    else {
+    } else {
         string = format!(
             "{:?} -> {:?} | {:?} ({:?} -> {:?}) | bytes : {} | first_exchange : {:.3} | last_exchange : {:.3}\n\n",
             packet.source_ip, packet.dest_ip, packet.l4_protocol, packet.source_port, packet.dest_port, packet.bytes_exchanged, packet.timestamp_first, packet.timestamp_last
@@ -58,6 +57,8 @@ pub fn fmt_for_file(packet: &Report, file: &mut File) {
     let res = file.write_all(string.as_bytes());
     match res {
         Ok(_) => {}
-        Err(_) => {println!("Error! Not possible to write on file...");}
+        Err(_) => {
+            println!("Error! Not possible to write on file...");
+        }
     }
 }

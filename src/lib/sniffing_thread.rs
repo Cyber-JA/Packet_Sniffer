@@ -22,14 +22,14 @@ pub fn sniff(
         .spawn(move || {
             let list = Device::list().unwrap();
             let mut cap = pcap::Capture::from_device(list[net_adapter - 1].clone())
-            .unwrap()
-            .promisc(true)
-            .timeout(5000)
-            .open()
-            .unwrap();
+                .unwrap()
+                .promisc(true)
+                .timeout(5000)
+                .open()
+                .unwrap();
 
             rev_tx_sniffer.send(String::from("sniffer ready!")).unwrap();
-            loop{
+            loop {
                 let handle = rx_sniffer.try_recv();
                 //println!("reader: {:?}", handle);
                 match handle {
@@ -43,7 +43,7 @@ pub fn sniff(
                         }
                     }
                 };
-                if let Ok(packet) = cap.next_packet(){
+                if let Ok(packet) = cap.next_packet() {
                     let report = parse(packet, time, start_time).clone();
                     if filtering(filter.clone(), report.clone()) == false {
                         continue;
@@ -66,8 +66,10 @@ pub fn sniff(
     tx_sniffer
 }
 
-pub fn insert_into_report(report_vector: &Arc<Mutex<Vec<Report>>>, packet: ReportPacket) -> (){
-    let mut vec = report_vector.lock().expect("Unexpected error! Press stop to end the program.");;
+pub fn insert_into_report(report_vector: &Arc<Mutex<Vec<Report>>>, packet: ReportPacket) -> () {
+    let mut vec = report_vector
+        .lock()
+        .expect("Unexpected error! Press stop to end the program.");
     let mut found = false;
     vec.iter_mut().for_each(|p| {
         if p.source_ip == packet.source_ip
@@ -121,7 +123,7 @@ pub fn filtering(filters_struct: LayersVectors, packet: ReportPacket) -> bool {
         return true;
     }
     if filters_struct.l7_vector.contains(&packet.l7_protocol) {
-        return true
+        return true;
     }
     false
 }

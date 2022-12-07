@@ -5,12 +5,12 @@ pub mod report_packet;
 pub mod sniffing_thread;
 pub mod writing_thread;
 
-use std::io::{stdout, Write};
 use crate::lib::cli::{get_cli, get_user_commands};
 use pktparse::ethernet::EtherType;
 use pktparse::ethernet::EtherType::ARP;
 use pktparse::ip::IPProtocol;
 use pktparse::ip::IPProtocol::{ICMP, TCP, UDP};
+use std::io::{stdout, Write};
 use std::sync::mpsc::{channel, RecvError};
 use std::sync::{Arc, Mutex};
 use std::time::Instant;
@@ -122,7 +122,9 @@ pub fn configure_and_run() -> () {
             let res = stdout().flush();
             match res {
                 Ok(_) => {}
-                Err(_) => { println!("Error! Not all bytes could be written due to I/O errors or EOF being reached.")}
+                Err(_) => {
+                    println!("Error! Not all bytes could be written due to I/O errors or EOF being reached.")
+                }
             }
         }
         if manager.is_sniffing_paused == true {
@@ -130,7 +132,9 @@ pub fn configure_and_run() -> () {
             let res = stdout().flush();
             match res {
                 Ok(_) => {}
-                Err(_) => { println!("Error! Not all bytes could be written due to I/O errors or EOF being reached.")}
+                Err(_) => {
+                    println!("Error! Not all bytes could be written due to I/O errors or EOF being reached.")
+                }
             }
         }
         let string = get_user_commands();
@@ -159,13 +163,23 @@ pub fn configure_and_run() -> () {
                     println!("Waiting for all the threads to start...");
                     let mut notify = rev_rx_sniffer.recv();
                     match notify {
-                        Ok(val) => {println!("{}", val);}
-                        Err(err) => {println!("{}", err); break;}
+                        Ok(val) => {
+                            println!("{}", val);
+                        }
+                        Err(err) => {
+                            println!("{}", err);
+                            break;
+                        }
                     }
                     notify = rev_rx_writer.recv();
                     match notify {
-                        Ok(val) => {println!("{}", val);}
-                        Err(err) => {println!("{}", err); break;}
+                        Ok(val) => {
+                            println!("{}", val);
+                        }
+                        Err(err) => {
+                            println!("{}", err);
+                            break;
+                        }
                     }
                     println!("Done!");
                     manager.start();
@@ -195,13 +209,23 @@ pub fn configure_and_run() -> () {
                     println!("Waiting for all the threads to pause...");
                     let mut notify = rev_rx_sniffer.recv();
                     match notify {
-                        Ok(val) => {println!("{}", val);}
-                        Err(err) => {println!("{}", err); break;}
+                        Ok(val) => {
+                            println!("{}", val);
+                        }
+                        Err(err) => {
+                            println!("{}", err);
+                            break;
+                        }
                     }
                     notify = rev_rx_writer.recv();
                     match notify {
-                        Ok(val) => {println!("{}", val);}
-                        Err(err) => {println!("{}", err); break;}
+                        Ok(val) => {
+                            println!("{}", val);
+                        }
+                        Err(err) => {
+                            println!("{}", err);
+                            break;
+                        }
                     }
                     println!("Done!");
                     manager.pause();
@@ -238,13 +262,23 @@ pub fn configure_and_run() -> () {
                     println!("Waiting for all the threads to start...");
                     let mut notify = rev_rx_sniffer.recv();
                     match notify {
-                        Ok(val) => {println!("{}", val);}
-                        Err(err) => {println!("{}", err); break;}
+                        Ok(val) => {
+                            println!("{}", val);
+                        }
+                        Err(err) => {
+                            println!("{}", err);
+                            break;
+                        }
                     }
                     notify = rev_rx_writer.recv();
                     match notify {
-                        Ok(val) => {println!("{}", val);}
-                        Err(err) => {println!("{}", err); break;}
+                        Ok(val) => {
+                            println!("{}", val);
+                        }
+                        Err(err) => {
+                            println!("{}", err);
+                            break;
+                        }
                     }
                     println!("Done!");
                     manager.resume();
@@ -273,13 +307,23 @@ pub fn configure_and_run() -> () {
                     println!("Waiting for all the threads to stop...");
                     let mut notify = rev_rx_sniffer.recv();
                     match notify {
-                        Ok(val) => {println!("{}", val);}
-                        Err(err) => {println!("{}", err); break;}
+                        Ok(val) => {
+                            println!("{}", val);
+                        }
+                        Err(err) => {
+                            println!("{}", err);
+                            break;
+                        }
                     }
                     notify = rev_rx_writer.recv();
                     match notify {
-                        Ok(val) => {println!("{}", val);}
-                        Err(err) => {println!("{}", err); break;}
+                        Ok(val) => {
+                            println!("{}", val);
+                        }
+                        Err(err) => {
+                            println!("{}", err);
+                            break;
+                        }
                     }
                 }
                 println!("Done!");
