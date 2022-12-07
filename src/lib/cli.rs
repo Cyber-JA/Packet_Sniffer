@@ -247,6 +247,7 @@ pub fn show_filters_available() {
     println!("> udp");
     println!("> tcp");
     println!("> icmp");
+    println!("> igmp");
     println!("> arp");
     println!("> dns");
     println!("> tls");
@@ -288,6 +289,7 @@ pub fn are_filters_acceptable(filter: String) -> bool {
     list.push(String::from("dns"));
     list.push(String::from("tls"));
     list.push(String::from("dhcp"));
+    list.push(String::from("igmp"));
     let mut flag = false;
     for f in filter.as_str().trim().split(" ") {
         flag = false;

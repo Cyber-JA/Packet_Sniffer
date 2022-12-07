@@ -1,0 +1,170 @@
+IPv4Addr(192.168.1.219) -> IPv4Addr(3.217.100.109) | TCP (59744 -> 443) | TLS | bytes : 7400 | first_exchange : 1.894 | last_exchange : 79.334
+
+IPv4Addr(192.168.1.219) -> IPv4Addr(192.168.1.1) | UDP (59064 -> 53) | DNS | bytes : 74 | first_exchange : 1.894 | last_exchange : 1.894
+
+IPv4Addr(192.168.1.1) -> IPv4Addr(192.168.1.219) | UDP (53 -> 63473) | DNS | bytes : 90 | first_exchange : 1.894 | last_exchange : 1.894
+
+IPv4Addr(192.168.1.219) -> IPv4Addr(192.168.1.1) | UDP (63473 -> 53) | DNS | bytes : 74 | first_exchange : 1.894 | last_exchange : 1.894
+
+IPv4Addr(192.168.1.1) -> IPv4Addr(192.168.1.219) | UDP (53 -> 59064) | DNS | bytes : 90 | first_exchange : 1.894 | last_exchange : 1.894
+
+IPv4Addr(192.168.1.219) -> IPv4Addr(142.250.184.109) | TCP (59739 -> 443) | bytes : 108 | first_exchange : 1.894 | last_exchange : 6.254
+
+IPv4Addr(192.168.1.219) -> IPv4Addr(185.199.108.154) | TCP (59756 -> 443) | bytes : 108 | first_exchange : 1.895 | last_exchange : 1.896
+
+IPv4Addr(192.168.1.219) -> IPv4Addr(185.199.108.133) | TCP (59761 -> 443) | bytes : 108 | first_exchange : 1.894 | last_exchange : 1.896
+
+IPv4Addr(192.168.1.219) -> IPv4Addr(216.58.209.33) | TCP (59755 -> 443) | bytes : 108 | first_exchange : 1.895 | last_exchange : 1.895
+
+IPv4Addr(192.168.1.219) -> IPv4Addr(142.251.209.46) | TCP (59742 -> 443) | bytes : 108 | first_exchange : 1.894 | last_exchange : 1.897
+
+IPv4Addr(192.168.1.219) -> IPv4Addr(142.251.209.35) | TCP (59748 -> 443) | bytes : 108 | first_exchange : 1.895 | last_exchange : 1.896
+
+IPv4Addr(192.168.1.219) -> IPv4Addr(185.199.108.154) | TCP (59760 -> 443) | bytes : 108 | first_exchange : 1.895 | last_exchange : 1.896
+
+IPv4Addr(192.168.1.219) -> IPv4Addr(142.251.209.14) | TCP (59753 -> 443) | bytes : 108 | first_exchange : 1.895 | last_exchange : 6.253
+
+IPv4Addr(192.168.1.219) -> IPv4Addr(142.251.209.10) | TCP (59740 -> 443) | bytes : 108 | first_exchange : 1.895 | last_exchange : 1.897
+
+IPv4Addr(192.168.1.219) -> IPv4Addr(192.168.1.1) | UDP (50601 -> 53) | DNS | bytes : 74 | first_exchange : 1.895 | last_exchange : 1.895
+
+IPv4Addr(192.168.1.219) -> IPv4Addr(192.168.1.1) | UDP (62140 -> 53) | bytes : 74 | first_exchange : 1.895 | last_exchange : 1.895
+
+IPv4Addr(192.168.1.1) -> IPv4Addr(192.168.1.219) | UDP (53 -> 50601) | DNS | bytes : 90 | first_exchange : 1.895 | last_exchange : 1.895
+
+IPv4Addr(185.199.108.154) -> IPv4Addr(192.168.1.219) | TCP (443 -> 59760) | TLS | bytes : 198 | first_exchange : 1.896 | last_exchange : 1.896
+
+IPv4Addr(216.58.209.33) -> IPv4Addr(192.168.1.219) | TCP (443 -> 59755) | TLS | bytes : 60 | first_exchange : 1.895 | last_exchange : 1.895
+
+IPv4Addr(142.251.209.35) -> IPv4Addr(192.168.1.219) | TCP (443 -> 59748) | TLS | bytes : 60 | first_exchange : 1.896 | last_exchange : 1.896
+
+IPv4Addr(185.199.108.154) -> IPv4Addr(192.168.1.219) | TCP (443 -> 59756) | TLS | bytes : 198 | first_exchange : 1.896 | last_exchange : 1.896
+
+IPv4Addr(185.199.108.133) -> IPv4Addr(192.168.1.219) | TCP (443 -> 59761) | TLS | bytes : 198 | first_exchange : 1.896 | last_exchange : 1.896
+
+IPv4Addr(142.251.209.14) -> IPv4Addr(192.168.1.219) | TCP (443 -> 59753) | TLS | bytes : 60 | first_exchange : 1.897 | last_exchange : 1.897
+
+IPv4Addr(192.168.1.1) -> IPv4Addr(192.168.1.219) | UDP (53 -> 62140) | bytes : 74 | first_exchange : 1.896 | last_exchange : 1.896
+
+IPv4Addr(142.251.209.46) -> IPv4Addr(192.168.1.219) | TCP (443 -> 59742) | TLS | bytes : 60 | first_exchange : 1.897 | last_exchange : 1.897
+
+IPv4Addr(142.251.209.10) -> IPv4Addr(192.168.1.219) | TCP (443 -> 59740) | TLS | bytes : 60 | first_exchange : 1.897 | last_exchange : 1.897
+
+IPv4Addr(142.250.184.109) -> IPv4Addr(192.168.1.219) | TCP (443 -> 59739) | TLS | bytes : 60 | first_exchange : 6.254 | last_exchange : 6.254
+
+IPv4Addr(3.217.100.109) -> IPv4Addr(192.168.1.219) | TCP (443 -> 59744) | TLS | bytes : 7622 | first_exchange : 6.254 | last_exchange : 79.334
+
+IPv4Addr(192.168.1.219) -> IPv4Addr(104.43.200.36) | TCP (59795 -> 443) | bytes : 4915 | first_exchange : 8.986 | last_exchange : 13.077
+
+IPv4Addr(192.168.1.219) -> IPv4Addr(192.168.1.1) | UDP (60599 -> 53) | DNS | bytes : 85 | first_exchange : 8.986 | last_exchange : 8.986
+
+IPv4Addr(104.43.200.36) -> IPv4Addr(192.168.1.219) | TCP (443 -> 59795) | bytes : 5183 | first_exchange : 8.987 | last_exchange : 13.077
+
+IPv4Addr(192.168.1.1) -> IPv4Addr(192.168.1.219) | UDP (53 -> 60599) | DNS | bytes : 152 | first_exchange : 8.986 | last_exchange : 8.986
+
+IPv4Addr(192.168.1.219) -> IPv4Addr(140.82.112.26) | TCP (59766 -> 443) | bytes : 193 | first_exchange : 13.078 | last_exchange : 75.377
+
+IPv4Addr(140.82.112.26) -> IPv4Addr(192.168.1.219) | TCP (443 -> 59766) | bytes : 265 | first_exchange : 13.078 | last_exchange : 75.377
+
+IPv4Addr(192.168.1.219) -> IPv4Addr(131.253.33.200) | TCP (59796 -> 443) | bytes : 202450 | first_exchange : 13.078 | last_exchange : 27.648
+
+IPv4Addr(131.253.33.200) -> IPv4Addr(192.168.1.219) | TCP (443 -> 59796) | bytes : 14366 | first_exchange : 13.078 | last_exchange : 27.648
+
+IPv4Addr(192.168.1.219) -> IPv4Addr(192.168.1.1) | UDP (52292 -> 53) | DNS | bytes : 85 | first_exchange : 13.461 | last_exchange : 13.461
+
+IPv4Addr(192.168.1.1) -> IPv4Addr(192.168.1.219) | UDP (53 -> 52292) | DNS | bytes : 320 | first_exchange : 13.461 | last_exchange : 13.461
+
+IPv4Addr(192.168.1.219) -> IPv4Addr(20.190.159.22) | TCP (59798 -> 443) | bytes : 5138 | first_exchange : 13.461 | last_exchange : 14.381
+
+IPv4Addr(192.168.1.219) -> IPv4Addr(20.190.159.22) | TCP (59797 -> 443) | bytes : 5138 | first_exchange : 13.462 | last_exchange : 14.381
+
+IPv4Addr(20.190.159.22) -> IPv4Addr(192.168.1.219) | TCP (443 -> 59797) | bytes : 7209 | first_exchange : 13.462 | last_exchange : 13.820
+
+IPv4Addr(20.190.159.22) -> IPv4Addr(192.168.1.219) | TCP (443 -> 59798) | bytes : 7231 | first_exchange : 13.462 | last_exchange : 13.820
+
+IPv4Addr(192.168.1.219) -> IPv4Addr(13.107.246.254) | TCP (59799 -> 443) | bytes : 1752 | first_exchange : 16.523 | last_exchange : 16.603
+
+IPv4Addr(13.107.246.254) -> IPv4Addr(192.168.1.219) | TCP (443 -> 59799) | bytes : 1715 | first_exchange : 16.524 | last_exchange : 16.603
+
+IPv4Addr(192.168.1.219) -> IPv4Addr(13.107.237.43) | TCP (59800 -> 443) | bytes : 1624 | first_exchange : 16.603 | last_exchange : 16.678
+
+IPv4Addr(192.168.1.219) -> IPv4Addr(192.168.1.1) | UDP (65324 -> 53) | DNS | bytes : 176 | first_exchange : 16.603 | last_exchange : 16.603
+
+IPv4Addr(13.107.237.43) -> IPv4Addr(192.168.1.219) | TCP (443 -> 59800) | bytes : 8410 | first_exchange : 16.604 | last_exchange : 16.677
+
+IPv4Addr(192.168.1.1) -> IPv4Addr(192.168.1.219) | UDP (53 -> 65324) | DNS | bytes : 623 | first_exchange : 16.603 | last_exchange : 16.603
+
+IPv4Addr(192.168.1.1) -> IPv4Addr(192.168.1.219) | UDP (53 -> 53619) | DNS | bytes : 133 | first_exchange : 16.678 | last_exchange : 16.678
+
+IPv4Addr(192.168.1.219) -> IPv4Addr(192.168.1.1) | UDP (53619 -> 53) | DNS | bytes : 86 | first_exchange : 16.678 | last_exchange : 16.678
+
+IPv4Addr(192.168.1.219) -> IPv4Addr(13.107.51.254) | TCP (59801 -> 443) | bytes : 1567 | first_exchange : 16.767 | last_exchange : 16.899
+
+IPv4Addr(13.107.51.254) -> IPv4Addr(192.168.1.219) | TCP (443 -> 59801) | bytes : 8431 | first_exchange : 16.767 | last_exchange : 16.899
+
+IPv4Addr(192.168.1.219) -> IPv4Addr(204.79.197.222) | TCP (59802 -> 443) | bytes : 2247 | first_exchange : 16.900 | last_exchange : 16.952
+
+IPv4Addr(204.79.197.222) -> IPv4Addr(192.168.1.219) | TCP (443 -> 59802) | bytes : 7709 | first_exchange : 16.900 | last_exchange : 16.953
+
+IPv4Addr(192.168.1.219) -> IPv4Addr(142.250.184.67) | TCP (59737 -> 443) | bytes : 218 | first_exchange : 19.465 | last_exchange : 79.335
+
+IPv4Addr(142.250.184.67) -> IPv4Addr(192.168.1.219) | TCP (443 -> 59737) | bytes : 319 | first_exchange : 19.465 | last_exchange : 79.335
+
+IPv4Addr(192.168.1.219) -> IPv4Addr(18.66.218.119) | TCP (59745 -> 443) | bytes : 218 | first_exchange : 20.398 | last_exchange : 80.491
+
+IPv4Addr(8.8.8.8) -> IPv4Addr(192.168.1.219) | ICMP (0 -> 0) | bytes : 296 | first_exchange : 20.398 | last_exchange : 27.648
+
+IPv4Addr(192.168.1.219) -> IPv4Addr(108.177.119.188) | TCP (59747 -> 5228) | bytes : 110 | first_exchange : 20.398 | last_exchange : 65.369
+
+IPv4Addr(18.66.218.119) -> IPv4Addr(192.168.1.219) | TCP (443 -> 59745) | bytes : 345 | first_exchange : 20.398 | last_exchange : 80.491
+
+IPv4Addr(192.168.1.219) -> IPv4Addr(8.8.8.8) | ICMP (0 -> 0) | bytes : 296 | first_exchange : 20.398 | last_exchange : 27.648
+
+IPv4Addr(108.177.119.188) -> IPv4Addr(192.168.1.219) | TCP (5228 -> 59747) | bytes : 132 | first_exchange : 20.398 | last_exchange : 65.369
+
+IPv4Addr(192.168.1.219) -> IPv4Addr(185.199.109.153) | TCP (59752 -> 443) | bytes : 110 | first_exchange : 22.608 | last_exchange : 70.361
+
+IPv4Addr(185.199.109.153) -> IPv4Addr(192.168.1.219) | TCP (443 -> 59752) | bytes : 132 | first_exchange : 22.608 | last_exchange : 70.361
+
+IPv4Addr(192.168.1.219) -> IPv4Addr(142.250.184.106) | TCP (59757 -> 443) | bytes : 110 | first_exchange : 27.649 | last_exchange : 70.362
+
+MacAddr(b8:d5:26:94:cd:a4) -> MacAddr(00:00:00:00:00:00) | ARP | bytes : 60 | first_exchange : 27.649 | last_exchange : 27.649
+
+IPv4Addr(142.250.184.106) -> IPv4Addr(192.168.1.219) | TCP (443 -> 59757) | bytes : 132 | first_exchange : 27.649 | last_exchange : 70.362
+
+MacAddr(98:22:ef:bd:14:21) -> MacAddr(b8:d5:26:94:cd:a4) | ARP | bytes : 42 | first_exchange : 27.649 | last_exchange : 27.649
+
+IPv4Addr(192.168.1.219) -> IPv4Addr(142.251.209.35) | TCP (59786 -> 443) | bytes : 110 | first_exchange : 32.663 | last_exchange : 78.388
+
+IPv4Addr(142.251.209.35) -> IPv4Addr(192.168.1.219) | TCP (443 -> 59786) | bytes : 132 | first_exchange : 32.663 | last_exchange : 78.388
+
+IPv4Addr(192.168.1.219) -> IPv4Addr(149.154.167.92) | TCP (59600 -> 443) | bytes : 1135 | first_exchange : 34.336 | last_exchange : 80.491
+
+IPv4Addr(192.168.1.219) -> IPv4Addr(224.0.0.22) | IGMP (0 -> 0) | bytes : 70 | first_exchange : 34.337 | last_exchange : 34.337
+
+IPv4Addr(192.168.1.1) -> IPv4Addr(224.0.0.1) | IGMP (0 -> 0) | bytes : 60 | first_exchange : 34.337 | last_exchange : 34.337
+
+IPv4Addr(149.154.167.92) -> IPv4Addr(192.168.1.219) | TCP (443 -> 59600) | bytes : 1849 | first_exchange : 34.337 | last_exchange : 80.491
+
+IPv4Addr(152.199.21.118) -> IPv4Addr(192.168.1.219) | TCP (443 -> 59780) | TLS | bytes : 263 | first_exchange : 44.362 | last_exchange : 44.363
+
+IPv4Addr(192.168.1.219) -> IPv4Addr(152.199.21.118) | TCP (59780 -> 443) | bytes : 108 | first_exchange : 44.362 | last_exchange : 44.363
+
+IPv4Addr(192.168.1.219) -> IPv4Addr(239.255.255.250) | UDP (55807 -> 1900) | bytes : 868 | first_exchange : 44.363 | last_exchange : 51.028
+
+IPv4Addr(192.168.1.209) -> IPv4Addr(192.168.1.219) | UDP (60000 -> 55807) | bytes : 1616 | first_exchange : 46.744 | last_exchange : 51.028
+
+IPv4Addr(192.168.1.1) -> IPv4Addr(192.168.1.219) | UDP (43385 -> 137) | DNS | bytes : 92 | first_exchange : 46.744 | last_exchange : 46.744
+
+IPv4Addr(192.168.1.219) -> IPv4Addr(192.168.1.1) | UDP (137 -> 43385) | bytes : 199 | first_exchange : 46.744 | last_exchange : 46.744
+
+MacAddr(80:0c:f9:91:41:24) -> MacAddr(00:00:00:00:00:00) | ARP | bytes : 60 | first_exchange : 51.029 | last_exchange : 51.029
+
+MacAddr(98:22:ef:bd:14:21) -> MacAddr(80:0c:f9:91:41:24) | ARP | bytes : 42 | first_exchange : 51.029 | last_exchange : 51.029
+
+IPv4Addr(192.168.1.219) -> IPv4Addr(239.255.255.250) | UDP (63807 -> 1900) | bytes : 864 | first_exchange : 78.387 | last_exchange : 80.491
+
+IPv4Addr(192.168.1.209) -> IPv4Addr(192.168.1.219) | UDP (60000 -> 63807) | bytes : 1616 | first_exchange : 78.388 | last_exchange : 80.491
+
+IPv4Addr(52.155.161.106) -> IPv4Addr(192.168.1.219) | TCP (443 -> 59789) | TLS | bytes : 185 | first_exchange : 80.491 | last_exchange : 80.492
+

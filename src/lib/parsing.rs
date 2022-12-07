@@ -2,7 +2,7 @@ use crate::lib::report_packet::{Address, MACAddress, ReportPacket};
 use pcap::Packet;
 use pktparse::ethernet::EtherType;
 use pktparse::ip::IPProtocol;
-use pktparse::ip::IPProtocol::{Other, ICMP, TCP, UDP};
+use pktparse::ip::IPProtocol::{Other, ICMP, IGMP, TCP, UDP};
 use std::net::Ipv4Addr;
 use std::time::Instant;
 
@@ -59,6 +59,9 @@ fn parse_ipv4(payload: &[u8], mut report: ReportPacket) -> ReportPacket {
             IPProtocol::ICMP => {
                 report = parse_icmp(payload, report);
             }
+            IPProtocol::IGMP => {
+                report = parse_igmp(payload, report);
+            }
             _ => {
                 report.l4_protocol = Other(0);
             }
@@ -83,6 +86,9 @@ fn parse_ipv6(payload: &[u8], mut report: ReportPacket) -> ReportPacket {
             }
             IPProtocol::ICMP => {
                 report = parse_icmp(payload, report);
+            }
+            IPProtocol::IGMP => {
+                report = parse_igmp(payload, report);
             }
             _ => {
                 report.l4_protocol = Other(0);
@@ -145,6 +151,12 @@ fn parse_udp(payload: &[u8], mut report: ReportPacket) -> ReportPacket {
             report.l7_protocol = "DHCP".to_string();
         }
     }
+    report
+}
+
+//IGMP PARSING
+fn parse_igmp(_payload: &[u8], mut report: ReportPacket) -> ReportPacket {
+    report.l4_protocol = IGMP;
     report
 }
 

@@ -9,7 +9,7 @@ use crate::lib::cli::{get_cli, get_user_commands};
 use pktparse::ethernet::EtherType;
 use pktparse::ethernet::EtherType::ARP;
 use pktparse::ip::IPProtocol;
-use pktparse::ip::IPProtocol::{ICMP, TCP, UDP};
+use pktparse::ip::IPProtocol::{ICMP, IGMP, TCP, UDP};
 use std::io::{stdout, Write};
 use std::sync::mpsc::channel;
 use std::sync::{Arc, Mutex};
@@ -369,6 +369,9 @@ pub fn fill_filters_vec(list: Vec<String>) -> LayersVectors {
             }
             "icmp" => {
                 vex_to_ret.l4_vector.push(ICMP);
+            }
+            "igmp" => {
+                vex_to_ret.l4_vector.push(IGMP);
             }
             "dns" => {
                 vex_to_ret.l7_vector.push("DNS".to_string());

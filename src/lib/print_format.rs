@@ -2,9 +2,11 @@ use crate::lib::report_packet::Report;
 use pktparse::ip::IPProtocol;
 use std::fs::File;
 use std::io::Write;
+use pktparse::ethernet::EtherType;
 
 pub fn fmt_for_file(packet: &Report, file: &mut File) {
     let string;
+    if packet.l3_protocol == EtherType::Other(0) { return }
     if packet.l4_protocol == IPProtocol::Other(0) {
         string = format!(
             "{:?} -> {:?} | {:?} | bytes : {} | first_exchange : {:.3} | last_exchange : {:.3}\n\n",
