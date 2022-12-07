@@ -1,9 +1,9 @@
 use crate::lib::parsing::parse;
 use crate::lib::report_packet::{Report, ReportPacket};
 use crate::lib::LayersVectors;
-use pcap::{Capture, Device, Error, Inactive};
+use pcap::{Device};
 use std::sync::mpsc::{channel, Sender, TryRecvError};
-use std::sync::{Arc, LockResult, Mutex, MutexGuard, PoisonError};
+use std::sync::{Arc, Mutex};
 use std::thread;
 use std::time::Instant;
 //#[allow(irrefutable_let_patterns)]

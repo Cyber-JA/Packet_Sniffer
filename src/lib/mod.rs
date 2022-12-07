@@ -11,7 +11,7 @@ use pktparse::ethernet::EtherType::ARP;
 use pktparse::ip::IPProtocol;
 use pktparse::ip::IPProtocol::{ICMP, TCP, UDP};
 use std::io::{stdout, Write};
-use std::sync::mpsc::{channel, RecvError};
+use std::sync::mpsc::{channel};
 use std::sync::{Arc, Mutex};
 use std::time::Instant;
 
