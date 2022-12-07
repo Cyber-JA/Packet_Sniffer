@@ -72,7 +72,6 @@ pub fn read_input_string() -> String {
             println!("{}", err);
         }
     }
-    print!(">>> ");
     let res = stdout().flush();
     match res {
         Ok(_) => {}
@@ -111,7 +110,6 @@ pub fn read_input_usize(len: usize) -> usize {
     }
     let mut user_input = String::new();
     io::stdin().lock().read_line(&mut user_input).unwrap();
-    print!(">>> ");
     let res = stdout().flush();
     match res {
         Ok(_) => {}
