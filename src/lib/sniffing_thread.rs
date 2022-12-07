@@ -1,9 +1,9 @@
 use crate::lib::parsing::parse;
 use crate::lib::report_packet::{Report, ReportPacket};
 use crate::lib::LayersVectors;
-use pcap::Device;
+use pcap::{Capture, Device, Error, Inactive};
 use std::sync::mpsc::{channel, Sender, TryRecvError};
-use std::sync::{Arc, Mutex};
+use std::sync::{Arc, LockResult, Mutex, MutexGuard, PoisonError};
 use std::thread;
 use std::time::Instant;
 //#[allow(irrefutable_let_patterns)]
@@ -39,7 +39,7 @@ pub fn sniff(
                     }
                     Err(error) => {
                         if error != TryRecvError::Empty && error != TryRecvError::Disconnected {
-                            panic!("Unexpected error in sniffer thread...{}. Panicking;", error);
+                            panic!("Unexpected error! Press stop to end the program.");
                         }
                     }
                 };
@@ -54,20 +54,20 @@ pub fn sniff(
                         .spawn(move || {
                             insert_into_report(&report_vector_copy, report);
                         })
-                        .unwrap();
+                        .expect("Unexpected error! Press stop to end the program.");
                 }
             }
             rev_tx_sniffer
                 .send(String::from("Stopping sniffer thread"))
-                .unwrap();
+                .expect("Unexpected error! Press stop to end the program.");
         })
-        .unwrap();
+        .expect("Unexpected error! Press stop to end the program.");
     /******************************************************/
     tx_sniffer
 }
 
-pub fn insert_into_report(report_vector: &Arc<Mutex<Vec<Report>>>, packet: ReportPacket) -> () {
-    let mut vec = report_vector.lock().unwrap();
+pub fn insert_into_report(report_vector: &Arc<Mutex<Vec<Report>>>, packet: ReportPacket) -> (){
+    let mut vec = report_vector.lock().expect("Unexpected error! Press stop to end the program.");;
     let mut found = false;
     vec.iter_mut().for_each(|p| {
         if p.source_ip == packet.source_ip

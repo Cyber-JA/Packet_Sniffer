@@ -45,13 +45,29 @@ pub fn get_cli() -> Args {
 
 pub fn read_input_string() -> String {
     println!("Waiting for user input...");
-    stdout().flush().unwrap();
+    let res = stdout().flush();
+    match res {
+        Ok(_) => {}
+        Err(_) => { println!("Error! Not all bytes could be written due to I/O errors or EOF being reached.")}
+    }
     println!(">>>");
-    stdout().flush().unwrap();
+    let res = stdout().flush();
+    match res {
+        Ok(_) => {}
+        Err(_) => { println!("Error! Not all bytes could be written due to I/O errors or EOF being reached.")}
+    }
     let mut user_input = String::new();
-    io::stdin().lock().read_line(&mut user_input).unwrap();
+    let val =  io::stdin().lock().read_line(&mut user_input);
+    match val {
+        Ok(_) => {}
+        Err(err) => { println!("{}", err);}
+    }
     println!(">>>");
-    stdout().flush().unwrap();
+    let res = stdout().flush();
+    match res {
+        Ok(_) => {}
+        Err(_) => { println!("Error! Not all bytes could be written due to I/O errors or EOF being reached.")}
+    }
     user_input = user_input.trim().parse().unwrap();
     user_input
 }
@@ -60,13 +76,25 @@ pub fn read_input_usize(len: usize) -> usize {
     let check;
     let mut my_int = 0;
     println!("Waiting for user input...");
-    stdout().flush().unwrap();
+    let res = stdout().flush();
+    match res {
+        Ok(_) => {}
+        Err(_) => { println!("Error! Not all bytes could be written due to I/O errors or EOF being reached.")}
+    }
     println!(">>>");
-    stdout().flush().unwrap();
+    let res = stdout().flush();
+    match res {
+        Ok(_) => {}
+        Err(_) => { println!("Error! Not all bytes could be written due to I/O errors or EOF being reached.")}
+    }
     let mut user_input = String::new();
     io::stdin().lock().read_line(&mut user_input).unwrap();
     println!(">>>");
-    stdout().flush().unwrap();
+    let res = stdout().flush();
+    match res {
+        Ok(_) => {}
+        Err(_) => { println!("Error! Not all bytes could be written due to I/O errors or EOF being reached.")}
+    }
     check = user_input.trim().parse::<usize>();
     match check {
         Ok(val) => {
@@ -79,7 +107,11 @@ pub fn read_input_usize(len: usize) -> usize {
     }
     if my_int < 1 || my_int > len {
         println!("Error! Insert a valid number:");
-        stdout().flush().unwrap();
+        let res = stdout().flush();
+        match res {
+            Ok(_) => {}
+            Err(_) => { println!("Error! Not all bytes could be written due to I/O errors or EOF being reached.")}
+        }
     }
     my_int
 }
@@ -90,7 +122,11 @@ pub fn get_user_commands() -> String {
     println!("-'pause' to pause the sniffing (can resume)");
     println!("-'stop' to stop the sniffing");
     println!("-'resume' to resume the sniffing");
-    stdout().flush().unwrap();
+    let res = stdout().flush();
+    match res {
+        Ok(_) => {}
+        Err(_) => { println!("Error! Not all bytes could be written due to I/O errors or EOF being reached.")}
+    }
     let user_input = read_input_string();
     match user_input.as_str() {
         "start" => {}
@@ -99,7 +135,11 @@ pub fn get_user_commands() -> String {
         "stop" => {}
         _ => {
             println!("Error: Invalid command...");
-            stdout().flush().unwrap();
+            let res = stdout().flush();
+            match res {
+                Ok(_) => {}
+                Err(_) => { println!("Error! Not all bytes could be written due to I/O errors or EOF being reached.")}
+            }
         }
     }
     user_input
@@ -112,7 +152,11 @@ pub fn select_device(net_adapter: usize) -> usize {
     /*****CHECKING VALUE TO SELECT DEVICE AND CHECK CORRECTNESS OF VALUES PROVIDED****/
     if net_adapter == 0 {
         println!("Select a device:");
-        stdout().flush().unwrap();
+        let res = stdout().flush();
+        match res {
+            Ok(_) => {}
+            Err(_) => { println!("Error! Not all bytes could be written due to I/O errors or EOF being reached.")}
+        }
         for (num, net_adapter) in list.iter().enumerate() {
             println!(
                 "{}) {} - {:?}",
@@ -120,7 +164,11 @@ pub fn select_device(net_adapter: usize) -> usize {
                 net_adapter.desc.as_ref().unwrap(),
                 net_adapter.addresses[1].addr
             );
-            stdout().flush().unwrap();
+            let res = stdout().flush();
+            match res {
+                Ok(_) => {}
+                Err(_) => { println!("Error! Not all bytes could be written due to I/O errors or EOF being reached.")}
+            }
         }
         while my_int <= 0 || my_int > list.len() - 1 {
             my_int = read_input_usize(list.len());
@@ -129,7 +177,11 @@ pub fn select_device(net_adapter: usize) -> usize {
         my_int = net_adapter;
         if my_int <= 0 || my_int > list.len() - 1 {
             println!("Error! Insert a valid number:");
-            stdout().flush().unwrap();
+            let res = stdout().flush();
+            match res {
+                Ok(_) => {}
+                Err(_) => { println!("Error! Not all bytes could be written due to I/O errors or EOF being reached.")}
+            }
         }
         while my_int <= 0 || my_int > list.len() - 1 {
             my_int = read_input_usize(list.len());
@@ -141,7 +193,11 @@ pub fn select_device(net_adapter: usize) -> usize {
 
 pub fn show_filters_available() {
     println!("The following filters are supported: ");
-    stdout().flush().unwrap();
+    let res = stdout().flush();
+    match res {
+        Ok(_) => {}
+        Err(_) => { println!("Error! Not all bytes could be written due to I/O errors or EOF being reached.")}
+    }
     println!("> udp");
     println!("> tcp");
     println!("> icmp");
@@ -216,12 +272,20 @@ pub fn select_among_filters() -> Vec<String> {
     let mut list = Vec::new();
     loop {
         println!("Insert filters (ENTER to apply no filtering)");
-        stdout().flush().unwrap();
+        let res = stdout().flush();
+        match res {
+            Ok(_) => {}
+            Err(_) => { println!("Error! Not all bytes could be written due to I/O errors or EOF being reached.")}
+        }
         let input_string = read_input_string();
         match input_string.as_str() {
             "" => {
                 println!("No filters applied...");
-                stdout().flush().unwrap();
+                let res = stdout().flush();
+                match res {
+                    Ok(_) => {}
+                    Err(_) => { println!("Error! Not all bytes could be written due to I/O errors or EOF being reached.")}
+                }
                 break;
             }
             _ => {
@@ -242,7 +306,11 @@ pub fn select_among_filters_with_provided_input(input_string: String) -> Vec<Str
         match input_string.as_str() {
             "" => {
                 println!("No filters applied");
-                stdout().flush().unwrap();
+                let res = stdout().flush();
+                match res {
+                    Ok(_) => {}
+                    Err(_) => { println!("Error! Not all bytes could be written due to I/O errors or EOF being reached.")}
+                }
                 break;
             }
             _ => {
@@ -252,7 +320,11 @@ pub fn select_among_filters_with_provided_input(input_string: String) -> Vec<Str
                 } else {
                     loop {
                         println!("Insert filters (ENTER to apply no filtering)");
-                        stdout().flush().unwrap();
+                        let res = stdout().flush();
+                        match res {
+                            Ok(_) => {}
+                            Err(_) => { println!("Error! Not all bytes could be written due to I/O errors or EOF being reached.")}
+                        }
                         let new_input = read_input_string();
                         if are_filters_acceptable(new_input.clone()) {
                             list = filters_as_vec(new_input);

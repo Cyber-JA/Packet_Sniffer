@@ -55,5 +55,9 @@ pub fn fmt_for_file(packet: &Report, file: &mut File) {
         )
     }
 
-    file.write_all(string.as_bytes()).unwrap();
+    let res = file.write_all(string.as_bytes());
+    match res {
+        Ok(_) => {}
+        Err(_) => {println!("Error! Not possible to write on file...");}
+    }
 }

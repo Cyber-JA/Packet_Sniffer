@@ -11,7 +11,7 @@ use pktparse::ethernet::EtherType;
 use pktparse::ethernet::EtherType::ARP;
 use pktparse::ip::IPProtocol;
 use pktparse::ip::IPProtocol::{ICMP, TCP, UDP};
-use std::sync::mpsc::channel;
+use std::sync::mpsc::{channel, RecvError};
 use std::sync::{Arc, Mutex};
 use std::time::Instant;
 
@@ -117,8 +117,22 @@ pub fn configure_and_run() -> () {
     let mut pause_time = Instant::now();
     loop {
         //Acquire command from the user
-        if manager.is_sniffing_active == true { println!("The sniffing session is in progress..."); stdout().flush().unwrap();}
-        if manager.is_sniffing_paused == true { println!("The sniffing session is paused..."); stdout().flush().unwrap();}
+        if manager.is_sniffing_active == true {
+            println!("The sniffing session is in progress...");
+            let res = stdout().flush();
+            match res {
+                Ok(_) => {}
+                Err(_) => { println!("Error! Not all bytes could be written due to I/O errors or EOF being reached.")}
+            }
+        }
+        if manager.is_sniffing_paused == true {
+            println!("The sniffing session is paused...");
+            let res = stdout().flush();
+            match res {
+                Ok(_) => {}
+                Err(_) => { println!("Error! Not all bytes could be written due to I/O errors or EOF being reached.")}
+            }
+        }
         let string = get_user_commands();
         match string.as_str() {
             //start case
@@ -143,10 +157,16 @@ pub fn configure_and_run() -> () {
                         /*&rx_writer,*/ rev_tx_writer.clone(),
                     );
                     println!("Waiting for all the threads to start...");
-                    let mut notify = rev_rx_sniffer.recv().unwrap();
-                    println!("{}", notify);
-                    notify = rev_rx_writer.recv().unwrap();
-                    println!("{}", notify);
+                    let mut notify = rev_rx_sniffer.recv();
+                    match notify {
+                        Ok(val) => {println!("{}", val);}
+                        Err(err) => {println!("{}", err); break;}
+                    }
+                    notify = rev_rx_writer.recv();
+                    match notify {
+                        Ok(val) => {println!("{}", val);}
+                        Err(err) => {println!("{}", err); break;}
+                    }
                     println!("Done!");
                     manager.start();
                 }
@@ -161,6 +181,7 @@ pub fn configure_and_run() -> () {
                         Ok(_) => {}
                         Err(e) => {
                             println!("{}", e);
+                            break;
                         }
                     }
                     err = tx_writer.send(String::from("pause"));
@@ -168,13 +189,20 @@ pub fn configure_and_run() -> () {
                         Ok(_) => {}
                         Err(e) => {
                             println!("{}", e);
+                            break;
                         }
                     }
                     println!("Waiting for all the threads to pause...");
-                    let mut notify = rev_rx_sniffer.recv().unwrap();
-                    println!("{}", notify);
-                    notify = rev_rx_writer.recv().unwrap();
-                    println!("{}", notify);
+                    let mut notify = rev_rx_sniffer.recv();
+                    match notify {
+                        Ok(val) => {println!("{}", val);}
+                        Err(err) => {println!("{}", err); break;}
+                    }
+                    notify = rev_rx_writer.recv();
+                    match notify {
+                        Ok(val) => {println!("{}", val);}
+                        Err(err) => {println!("{}", err); break;}
+                    }
                     println!("Done!");
                     manager.pause();
                 }
@@ -208,10 +236,16 @@ pub fn configure_and_run() -> () {
                         /*&rx_writer,*/ rev_tx_writer.clone(),
                     );
                     println!("Waiting for all the threads to start...");
-                    let mut notify = rev_rx_sniffer.recv().unwrap();
-                    println!("{}", notify);
-                    notify = rev_rx_writer.recv().unwrap();
-                    println!("{}", notify);
+                    let mut notify = rev_rx_sniffer.recv();
+                    match notify {
+                        Ok(val) => {println!("{}", val);}
+                        Err(err) => {println!("{}", err); break;}
+                    }
+                    notify = rev_rx_writer.recv();
+                    match notify {
+                        Ok(val) => {println!("{}", val);}
+                        Err(err) => {println!("{}", err); break;}
+                    }
                     println!("Done!");
                     manager.resume();
                 }
@@ -225,6 +259,7 @@ pub fn configure_and_run() -> () {
                         Ok(_) => {}
                         Err(e) => {
                             println!("{}", e);
+                            break;
                         }
                     }
                     err = tx_writer.send(String::from("stop"));
@@ -232,13 +267,20 @@ pub fn configure_and_run() -> () {
                         Ok(_) => {}
                         Err(e) => {
                             println!("{}", e);
+                            break;
                         }
                     }
                     println!("Waiting for all the threads to stop...");
-                    let mut notify = rev_rx_sniffer.recv().unwrap();
-                    println!("{}", notify);
-                    notify = rev_rx_writer.recv().unwrap();
-                    println!("{}", notify);
+                    let mut notify = rev_rx_sniffer.recv();
+                    match notify {
+                        Ok(val) => {println!("{}", val);}
+                        Err(err) => {println!("{}", err); break;}
+                    }
+                    notify = rev_rx_writer.recv();
+                    match notify {
+                        Ok(val) => {println!("{}", val);}
+                        Err(err) => {println!("{}", err); break;}
+                    }
                 }
                 println!("Done!");
                 manager.stop();

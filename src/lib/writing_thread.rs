@@ -25,7 +25,7 @@ pub fn write_file(
                 .truncate(true)
                 .create(true)
                 .open(file_name)
-                .unwrap(); //file opened in append mode, read-write mode, if not exists, create it
+                .expect("Impossible to open the file! Press stop to end the program."); //file opened in append mode, read-write mode, if not exists, create it
             rev_tx_writer.send(String::from("writer ready!")).unwrap();
             loop {
                 let handle = rx_writer.try_recv();
@@ -37,7 +37,7 @@ pub fn write_file(
                     }
                     Err(error) => {
                         if error != TryRecvError::Empty && error != TryRecvError::Disconnected {
-                            panic!("Unexpected error in writer thread! Panicking...{}", error)
+                            panic!("Unexpected error! Press stop to end the program.");
                         }
                     }
                 };
@@ -45,18 +45,18 @@ pub fn write_file(
             }
             rev_tx_writer
                 .send(String::from("Stopping writer thread"))
-                .unwrap();
+                .expect("Unexpected error! Press stop to end the program.");
         })
-        .unwrap();
+        .expect("Unexpected error! Press stop to end the program.");
     /******************************************************/
     tx_writer
 }
 
 pub fn write_report(report_vector: &Arc<Mutex<Vec<Report>>>, timeout: u64, file: &mut File) -> () {
-    file.rewind().unwrap();
+    file.rewind().expect("Unexpected error! Press stop to end the program.");;
     thread::sleep(Duration::from_millis(timeout));
     //println!("----------------------------------------------------------------------------------");
-    let vec = report_vector.lock().unwrap();
+    let vec = report_vector.lock().expect("Unexpected error! Press stop to end the program.");
     vec.iter().for_each(|p| fmt_for_file(p, file));
     //println!("wrote file");
 }
