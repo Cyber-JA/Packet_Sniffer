@@ -1,17 +1,17 @@
 use crate::lib::parsing::parse;
 use crate::lib::report_packet::{Report, ReportPacket};
 use crate::lib::LayersVectors;
-use pcap::{Device};
+use pcap::Device;
 use std::sync::mpsc::{channel, Sender, TryRecvError};
 use std::sync::{Arc, Mutex};
 use std::thread;
 use std::time::Instant;
-//#[allow(irrefutable_let_patterns)]
+
 pub fn sniff(
     net_adapter: usize,
     report_vector: Arc<Mutex<Vec<Report>>>,
     filter: LayersVectors,
-    /*rx_sniffer: &Receiver<String>,*/ rev_tx_sniffer: Sender<String>,
+    rev_tx_sniffer: Sender<String>,
     time: Instant,
     start_time: u128,
 ) -> Sender<String> {
@@ -31,7 +31,7 @@ pub fn sniff(
             rev_tx_sniffer.send(String::from("sniffer ready!")).unwrap();
             loop {
                 let handle = rx_sniffer.try_recv();
-                //println!("reader: {:?}", handle);
+
                 match handle {
                     Ok(_) => {
                         println!("sniffer {:?}", handle);

@@ -11,7 +11,7 @@ pub fn write_file(
     mut file_name: String,
     timeout: u16,
     report_vector: Arc<Mutex<Vec<Report>>>,
-    /*rx_writer: &Receiver<String>,*/ rev_tx_writer: Sender<String>,
+    rev_tx_writer: Sender<String>,
 ) -> Sender<String> {
     /****************** WRITER THREAD *******************/
     let (tx_writer, rx_writer) = channel::<String>();
@@ -29,7 +29,7 @@ pub fn write_file(
             rev_tx_writer.send(String::from("writer ready!")).unwrap();
             loop {
                 let handle = rx_writer.try_recv();
-                //println!("writer: {:?}", handle);
+
                 match handle {
                     Ok(_) => {
                         println!("writer {:?}", handle);
@@ -56,10 +56,9 @@ pub fn write_report(report_vector: &Arc<Mutex<Vec<Report>>>, timeout: u64, file:
     file.rewind()
         .expect("Unexpected error! Press stop to end the program.");
     thread::sleep(Duration::from_secs(timeout));
-    //println!("----------------------------------------------------------------------------------");
+
     let vec = report_vector
         .lock()
         .expect("Unexpected error! Press stop to end the program.");
     vec.iter().for_each(|p| fmt_for_file(p, file));
-    //println!("wrote file");
 }

@@ -259,7 +259,6 @@ pub fn trim_whitespaces(s: &str) -> String {
 }
 
 pub fn comma_to_space(s: &str) -> String {
-    // first attempt: allocates a vector and a string
     let words: Vec<_> = s.split(",").collect();
     words.join(" ")
 }

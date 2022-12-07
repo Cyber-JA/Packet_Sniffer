@@ -1,9 +1,8 @@
 use crate::lib::report_packet::{Address, MACAddress, ReportPacket};
 use pcap::Packet;
 use pktparse::ethernet::EtherType;
-use pktparse::ethernet::EtherType::IPv4;
 use pktparse::ip::IPProtocol;
-use pktparse::ip::IPProtocol::{Other, TCP, UDP};
+use pktparse::ip::IPProtocol::{Other, ICMP, TCP, UDP};
 use std::net::Ipv4Addr;
 use std::time::Instant;
 
@@ -68,7 +67,7 @@ fn parse_ipv4(payload: &[u8], mut report: ReportPacket) -> ReportPacket {
     report
 }
 
-//IPV6 PARSING, TO COMPLETE
+//IPV6 PARSING
 fn parse_ipv6(payload: &[u8], mut report: ReportPacket) -> ReportPacket {
     if let Ok((payload, datagram)) = pktparse::ipv6::parse_ipv6_header(payload) {
         report.l3_protocol = EtherType::IPv6;
@@ -93,7 +92,7 @@ fn parse_ipv6(payload: &[u8], mut report: ReportPacket) -> ReportPacket {
     report
 }
 
-//ARP PARSING, TO COMPLETE
+//ARP PARSING
 fn parse_arp(payload: &[u8], mut report: ReportPacket) -> ReportPacket {
     if let Ok((_payload, header)) = pktparse::arp::parse_arp_pkt(payload) {
         report.l3_protocol = EtherType::ARP;
@@ -117,7 +116,7 @@ fn parse_arp(payload: &[u8], mut report: ReportPacket) -> ReportPacket {
     report
 }
 
-//TCP PARSING, TO COMPLETE
+//TCP PARSING
 fn parse_tcp(payload: &[u8], mut report: ReportPacket) -> ReportPacket {
     if let Ok((p, header)) = pktparse::tcp::parse_tcp_header(payload) {
         report.source_port = header.source_port;
@@ -134,7 +133,7 @@ fn parse_tcp(payload: &[u8], mut report: ReportPacket) -> ReportPacket {
     report
 }
 
-//UDP PARSING, TO COMPLETE
+//UDP PARSING
 fn parse_udp(payload: &[u8], mut report: ReportPacket) -> ReportPacket {
     if let Ok((udp_datagram, header)) = pktparse::udp::parse_udp_header(payload) {
         report.source_port = header.source_port;
@@ -149,12 +148,10 @@ fn parse_udp(payload: &[u8], mut report: ReportPacket) -> ReportPacket {
     report
 }
 
-//ICMP PARSING, TO COMPLETE
+//ICMP PARSING
 fn parse_icmp(payload: &[u8], mut report: ReportPacket) -> ReportPacket {
     if let Ok((_icmp_payload, _header)) = pktparse::icmp::parse_icmp_header(payload) {
-        //report.source_port = header.source_port;
-        //report.dest_port = header.dest_port;
-        report.l3_protocol = IPv4;
+        report.l4_protocol = ICMP;
     }
     report
 }

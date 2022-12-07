@@ -11,7 +11,7 @@ use pktparse::ethernet::EtherType::ARP;
 use pktparse::ip::IPProtocol;
 use pktparse::ip::IPProtocol::{ICMP, TCP, UDP};
 use std::io::{stdout, Write};
-use std::sync::mpsc::{channel};
+use std::sync::mpsc::channel;
 use std::sync::{Arc, Mutex};
 use std::time::Instant;
 
@@ -101,9 +101,9 @@ pub fn configure_and_run() -> () {
     let report_vector = Arc::new(Mutex::new(Vec::new()));
     /*********************************************************************************/
 
-    /**** FLAG USED TO CHECK WHETER THE SNIFFING PROCESS IS ACTIVE OR NOT ****/
+    /**** STRUCT USED TO CHECK WHETER THE SNIFFING PROCESS IS ACTIVE OR NOT AND TO SWITCH STATES ****/
     let mut manager = SniffingManager::new();
-    /*************************************************************************/
+    /************************************************************************************************/
 
     /************* CREATING CHANNELS TO COMMUNICATE WITH THREADS *************/
     let (mut tx_writer, _rx_writer) = channel::<String>();
@@ -150,7 +150,7 @@ pub fn configure_and_run() -> () {
                         net_adapter_cp,
                         report_vector.clone(),
                         filters_struct.clone(),
-                        /*&rx_sniffer,*/ rev_tx_sniffer.clone(),
+                        rev_tx_sniffer.clone(),
                         time,
                         0,
                     );
@@ -158,7 +158,7 @@ pub fn configure_and_run() -> () {
                         output_file_name.clone(),
                         timeout,
                         report_vector.clone(),
-                        /*&rx_writer,*/ rev_tx_writer.clone(),
+                        rev_tx_writer.clone(),
                     );
                     println!("Waiting for all the threads to start...");
                     let mut notify = rev_rx_sniffer.recv();
@@ -249,7 +249,7 @@ pub fn configure_and_run() -> () {
                         net_adapter_cp,
                         report_vector.clone(),
                         filters_struct.clone(),
-                        /*&rx_sniffer,*/ rev_tx_sniffer.clone(),
+                        rev_tx_sniffer.clone(),
                         time,
                         resume_time,
                     );
@@ -257,7 +257,7 @@ pub fn configure_and_run() -> () {
                         output_file_name.clone(),
                         timeout,
                         report_vector.clone(),
-                        /*&rx_writer,*/ rev_tx_writer.clone(),
+                        rev_tx_writer.clone(),
                     );
                     println!("Waiting for all the threads to start...");
                     let mut notify = rev_rx_sniffer.recv();
