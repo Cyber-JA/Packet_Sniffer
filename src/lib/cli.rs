@@ -22,8 +22,8 @@ pub struct Args {
     #[arg(short, long)]
     pub(crate) output_file_name: String,
 
-    /// timeout after which a report is produced (default value: 2000)
-    #[arg(short, long, default_value_t = 2000)]
+    /// timeout (in seconds) after which a report is produced (default value: 2 s)
+    #[arg(short, long, default_value_t = 2)]
     pub(crate) timeout: u16, //in ms
 
     /// specify filters to apply between quotes (e.g. TCP, reports TCP's packets only), do not specify parameters to see a list of available filters
