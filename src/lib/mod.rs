@@ -92,9 +92,6 @@ pub fn configure_and_run() -> () {
     let timeout = args.timeout.clone();
     let filters_vec = args.filters_list.clone();
     let filters_struct = fill_filters_vec(filters_vec.clone());
-    println!("{:?}", filters_struct.l4_vector);
-    println!("{:?}", filters_struct.l3_vector);
-    println!("{:?}", filters_struct.l7_vector);
     let mut err;
     /********************************************************/
     /*** MUTEX WHERE PACKETS ARE PUSHED WHEN SNIFFED AND POPPED WHEN WROTE ON FILE ***/
