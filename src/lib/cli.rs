@@ -145,11 +145,6 @@ pub fn read_input_usize(len: usize) -> usize {
 }
 
 pub fn get_user_commands() -> String {
-    println!("Commands:");
-    println!("-'start' to start the sniffing");
-    println!("-'pause' to pause the sniffing (can resume)");
-    println!("-'stop' to stop the sniffing");
-    println!("-'resume' to resume the sniffing");
     let res = stdout().flush();
     match res {
         Ok(_) => {}
@@ -167,6 +162,11 @@ pub fn get_user_commands() -> String {
         "stop" => {}
         _ => {
             println!("Error: Invalid command...");
+            println!("Commands:");
+            println!("-'start' to start the sniffing");
+            println!("-'pause' to pause the sniffing (can resume)");
+            println!("-'stop' to stop the sniffing");
+            println!("-'resume' to resume the sniffing");
             let res = stdout().flush();
             match res {
                 Ok(_) => {}
@@ -354,7 +354,7 @@ pub fn select_among_filters() -> Vec<String> {
 
 pub fn select_among_filters_with_provided_input(input_string: String) -> Vec<String> {
     let mut list = Vec::new();
-    println!("provided input: {}", input_string);
+    println!("Filters Selected: {}", input_string);
     loop {
         match input_string.as_str() {
             "" => {

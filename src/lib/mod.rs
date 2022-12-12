@@ -112,10 +112,14 @@ pub fn configure_and_run() -> () {
     /******************************** START SNIFFING ********************************/
     let mut time = Instant::now();
     let mut pause_time = Instant::now();
+    println!("Commands:");
+    println!("-'start' to start the sniffing");
+    println!("-'pause' to pause the sniffing (can resume)");
+    println!("-'stop' to stop the sniffing");
+    println!("-'resume' to resume the sniffing");
     loop {
         //Acquire command from the user
         if manager.is_sniffing_active == true {
-            println!("The sniffing session is in progress...");
             let res = stdout().flush();
             match res {
                 Ok(_) => {}
@@ -160,8 +164,7 @@ pub fn configure_and_run() -> () {
                     println!("Waiting for all the threads to start...");
                     let mut notify = rev_rx_sniffer.recv();
                     match notify {
-                        Ok(val) => {
-                            println!("{}", val);
+                        Ok(_) => {
                         }
                         Err(err) => {
                             println!("{}", err);
@@ -170,15 +173,14 @@ pub fn configure_and_run() -> () {
                     }
                     notify = rev_rx_writer.recv();
                     match notify {
-                        Ok(val) => {
-                            println!("{}", val);
+                        Ok(_) => {
                         }
                         Err(err) => {
                             println!("{}", err);
                             break;
                         }
                     }
-                    println!("Done!");
+                    println!("Sniffing in progress...");
                     manager.start();
                 }
             }
@@ -206,8 +208,7 @@ pub fn configure_and_run() -> () {
                     println!("Waiting for all the threads to pause...");
                     let mut notify = rev_rx_sniffer.recv();
                     match notify {
-                        Ok(val) => {
-                            println!("{}", val);
+                        Ok(_) => {
                         }
                         Err(err) => {
                             println!("{}", err);
@@ -216,15 +217,13 @@ pub fn configure_and_run() -> () {
                     }
                     notify = rev_rx_writer.recv();
                     match notify {
-                        Ok(val) => {
-                            println!("{}", val);
+                        Ok(_) => {
                         }
                         Err(err) => {
                             println!("{}", err);
                             break;
                         }
                     }
-                    println!("Done!");
                     manager.pause();
                 }
                 pause_time = Instant::now();
@@ -234,11 +233,6 @@ pub fn configure_and_run() -> () {
                 if manager.can_resume() == false {
                     println!("Error: Can't resume, no sniffing session to resume!");
                 } else {
-                    println!(
-                        "ELAPSED: {}, PAUSED: {}",
-                        time.elapsed().as_millis(),
-                        pause_time.elapsed().as_millis()
-                    );
                     let resume_time = time.elapsed().as_millis() - pause_time.elapsed().as_millis();
                     time = Instant::now();
                     /*starting sniffing and writing thread*/
@@ -259,8 +253,7 @@ pub fn configure_and_run() -> () {
                     println!("Waiting for all the threads to start...");
                     let mut notify = rev_rx_sniffer.recv();
                     match notify {
-                        Ok(val) => {
-                            println!("{}", val);
+                        Ok(_) => {
                         }
                         Err(err) => {
                             println!("{}", err);
@@ -269,21 +262,19 @@ pub fn configure_and_run() -> () {
                     }
                     notify = rev_rx_writer.recv();
                     match notify {
-                        Ok(val) => {
-                            println!("{}", val);
+                        Ok(_) => {
                         }
                         Err(err) => {
                             println!("{}", err);
                             break;
                         }
                     }
-                    println!("Done!");
+                    println!("Sniffing in progress...");
                     manager.resume();
                 }
             }
             //stop case
             "stop" => {
-                println!("Terminating program");
                 if manager.is_active() == true && manager.is_paused() == false {
                     err = tx_sniffer.send(String::from("stop"));
                     match err {
@@ -304,8 +295,7 @@ pub fn configure_and_run() -> () {
                     println!("Waiting for all the threads to stop...");
                     let mut notify = rev_rx_sniffer.recv();
                     match notify {
-                        Ok(val) => {
-                            println!("{}", val);
+                        Ok(_) => {
                         }
                         Err(err) => {
                             println!("{}", err);
@@ -314,8 +304,7 @@ pub fn configure_and_run() -> () {
                     }
                     notify = rev_rx_writer.recv();
                     match notify {
-                        Ok(val) => {
-                            println!("{}", val);
+                        Ok(_) => {
                         }
                         Err(err) => {
                             println!("{}", err);
@@ -323,7 +312,7 @@ pub fn configure_and_run() -> () {
                         }
                     }
                 }
-                println!("Done!");
+                println!("Program terminated");
                 manager.stop();
                 break;
             }

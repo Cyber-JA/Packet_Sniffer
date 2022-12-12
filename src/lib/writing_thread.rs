@@ -32,7 +32,6 @@ pub fn write_file(
 
                 match handle {
                     Ok(_) => {
-                        println!("writer {:?}", handle);
                         break;
                     }
                     Err(error) => {

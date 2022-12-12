@@ -34,7 +34,6 @@ pub fn sniff(
 
                 match handle {
                     Ok(_) => {
-                        println!("sniffer {:?}", handle);
                         break;
                     }
                     Err(error) => {
