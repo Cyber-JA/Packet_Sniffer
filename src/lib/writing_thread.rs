@@ -8,14 +8,13 @@ use std::thread;
 use std::time::Duration;
 
 pub fn write_file(
-    mut file_name: String,
+    file_name: String,
     timeout: u16,
     report_vector: Arc<Mutex<Vec<Report>>>,
     rev_tx_writer: Sender<String>,
 ) -> Sender<String> {
     /****************** WRITER THREAD *******************/
     let (tx_writer, rx_writer) = channel::<String>();
-    file_name.push_str(".txt");
     thread::Builder::new()
         .name("writer".into())
         .spawn(move || {
