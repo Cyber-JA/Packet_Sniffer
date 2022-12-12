@@ -1,7 +1,19 @@
 # Packet_Sniffer
 
+Project m1: Network analyzer.
+Team members:
+- Caruso Giuseppe S303335
+- Andorno Pietro S303401
+- Fois Andrea S295102
+
+## Links
 - [Basic Usage](#basic-usage)
 - [Available Options](#available-options)
+- [Supported Filters](#supported-filters)
+- [Timeout](#timeout)
+- [Network Adapter](#network-adapters)
+- [Available Commands](#available-commands)
+- [Functions](#functions)
 
 ## Basic Usage
 
